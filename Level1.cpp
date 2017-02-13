@@ -18,7 +18,7 @@ Level1::Level1()
 	)
 {
 	Model logo { 
-		std::string("logo.png"),
+		std::string("labrat-game/logo.png"),
 		std::vector<VertexData2D> {
 			{ { 0, 1, 0, 255 },{ -0.90f, 0.90f }},
 			{ { 1, 0, 0, 255 },{ 0.90f, -0.90f } },

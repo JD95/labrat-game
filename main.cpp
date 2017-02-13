@@ -10,6 +10,7 @@
 #include "../labrat/window/game.h"
 #include "../labrat/utilities/function_view.h"
 #include "../labrat/reactive/reactive.h"
+#include "Level1.h"
 
 using std::vector;
 using std::function;
