@@ -9,32 +9,41 @@
 #include "../labrat/entity/entity.h"
 #include "../labrat/graphics/model.h"
 #include "../labrat/opengl/vertexdata.h"
+#include "../labrat/physics/PhysObj.h"
 
+#include "models/general_models.h"
+
+constexpr float model_body_ratio = 1.0f;
+
+constexpr glm::vec3 physics_ratio_scaling(float x, float y) {
+	return glm::vec3(model_body_ratio * x, model_body_ratio * y, 1.0f);
+}
 
 Level1::Level1()
-	: main_camera(Camera( glm::vec3(0, 0.0f, 2.0f)		// Position
+	: main_camera(Camera( glm::vec3(0.0f, -1.0f, 5.0f)		// Position
 						, glm::vec3(0.0, 0.5f, -10.0f)	// Focus
 						, glm::vec3(0, 1.0f, 0))		// Up
 				)
 {
-	Model logo { 
-		std::string("labrat-game/logo.png"),
-		std::vector<VertexData2D> {
-			{ { 0, 1, 0, 255 },{ -0.90f, 0.90f }},
-			{ { 1, 0, 0, 255 },{ 0.90f, -0.90f } },
-			{ { 0, 0, 0, 255 },{ -0.90f, -0.90f } },
-			{ { 0, 1, 255, 255 },{ -0.90f, 0.90f } },
-			{ { 1, 0, 255, 255 },{ 0.90f, -0.90f } },
-			{ { 1, 1, 255, 255 },{ 0.90f, 0.90f } },
-	}};
+	
 
-	Transform t(glm::vec3(0, 0.0f, 0), glm::vec3(1.0f, 1.0f, 1.0f));
+	float world_step = 0.0167f;
 
-	picture1 = spawn(logo, t);
+	picture1 = spawn(ground_model(), 
+		Transform(glm::vec3(0, 0.0f, 0), physics_ratio_scaling(5.0f, 1.0f)),
+		PhysObj (0.0, -1.0, 0.0f, 1.0, 10.0, world_step));
 
-	t.position[1] += 2;
+	player = spawn(player_model(),
+		Transform (glm::vec3(0, 2.0f, 0), physics_ratio_scaling(1.0f, 1.0f)),
+		PhysObj(0.0, 3.0, 2.0, 1.0, 1.0, world_step));
 
-	picture2 = spawn(logo, t);
+	friend_bot1 = spawn(friend_model(),
+		Transform(glm::vec3(3.0f, 2.0f, 0.0f), physics_ratio_scaling(0.5f, 0.5f)),
+		PhysObj(3.0f, 2.0f, 1.0f, 0.5, 0.5, world_step));
+
+	friend_bot2 = spawn(friend_model(),
+		Transform(glm::vec3(-3.0f, 3.0f, 0.0f), physics_ratio_scaling(0.5f, 0.5f)),
+		PhysObj(-3.0f, 3.0f, 1.0f, 0.5, 0.5, world_step));
 }
 
 
@@ -42,46 +51,34 @@ Level1::~Level1()
 {
 }
 
-update_t<Level1&> move_camera_bindings(Camera& c, SDL_Event event) {
-	return [&c, event](auto& l){
-		// Negative because we are moving the world not the camera
-		const float camera_speed = 0.05f;
-		switch (event.key.keysym.sym)
-		{
-		case SDLK_w:
-			c.position[1] += camera_speed;
-			c.focus[1] += camera_speed;
-			break;
-		case SDLK_s:
-			c.position[1] -= camera_speed;
-			c.focus[1] -= camera_speed;
-			break;
-		case  SDLK_a:
-			c.position[0] -= camera_speed;
-			c.focus[0] -= camera_speed;
-			break;
-		case SDLK_d:
-			c.position[0] += camera_speed;
-			c.focus[0] += camera_speed;
-			break;
-		case SDLK_UP:
-			c.rotate_camera(camera_speed, 0, 0);
-			break;
-		case SDLK_DOWN:
-			c.rotate_camera(-1 * camera_speed, 0, 0);
-			break;
-		case  SDLK_LEFT:
-			c.rotate_camera(0, camera_speed, 0);
-			break;
-		case SDLK_RIGHT:
-			c.rotate_camera(0, -1 * camera_speed, 0);
-			break;
-		default: break;
-		}
-	};	
+update_t<Level1&> sync_physics_body(Entity* obj) {
+	return [obj](auto& level) {
+		auto& b = obj->body->position;
+		glm::vec3 new_pos;
+		new_pos[0] = b[0];
+		new_pos[1] = b[1];
+		new_pos[2] = 0.0f;
+		obj->transform.position = new_pos;
+		//std::cout << "Picture is at " << obj->transform.position[0] << " "<< obj->transform.position[1] << "\n";
+	};
+}
+
+update_t<Level1&> camera_track_object(Camera& c, Entity* obj) {
+	return [&c, obj](auto& level) {
+		c.focus = obj->transform.position;
+		c.position[0] = obj->transform.position[0];
+		c.position[1] = obj->transform.position[1];
+	};
 }
 
 void Level1::construct_updates(vector<update_t<Level1&>>& updates, const vector<SDL_Event>& keyboard_events, const Level1& prev) {
 	if (keyboard_events.size() > 0)
-		updates.push_back(move_camera_bindings(main_camera, keyboard_events[0]));
+		updates.push_back(controls(player, keyboard_events));
+	
+	// Sync the images with the physics bodies
+	updates.push_back(camera_track_object(main_camera, player));
+	updates.push_back(sync_physics_body(picture1));
+	updates.push_back(sync_physics_body(player));
+	updates.push_back(sync_physics_body(friend_bot1));
+	updates.push_back(sync_physics_body(friend_bot2));
 }
