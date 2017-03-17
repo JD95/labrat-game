@@ -20,7 +20,7 @@ constexpr glm::vec3 physics_ratio_scaling(float x, float y) {
 }
 
 Level1::Level1()
-	: main_camera(Camera( glm::vec3(0.0f, -1.0f, 5.0f)		// Position
+	: main_camera(Camera( glm::vec3(0.0f, -1.0f, 10.0f)		// Position
 						, glm::vec3(0.0, 0.5f, -10.0f)	// Focus
 						, glm::vec3(0, 1.0f, 0))		// Up
 				)
