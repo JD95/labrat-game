@@ -33,6 +33,9 @@ Level1::Level1()
 		Transform(glm::vec3(0, 0.0f, 0), physics_ratio_scaling(5.0f, 1.0f)),
 		PhysObj (0.0, -1.0, 0.0f, 1.0, 10.0, world_step));
 
+	picture1->body->dynamic_friction = 0.30f;
+	picture1->body->static_friction = 0.35f;
+
 	player = spawn(player_model(),
 		Transform (glm::vec3(0, 2.0f, 0), physics_ratio_scaling(1.0f, 1.0f)),
 		PhysObj(0.0, 3.0, 2.0, 1.0, 1.0, world_step));
