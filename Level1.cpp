@@ -35,10 +35,10 @@ Level1::Level1()
 
 	for (int i = 0; i < 10; i++)
 	{
-		trees.push_back(spawn_massless(tree_model(), scenary_layer, -10.0f + i*2.0f, 1.0f, 1.0f, 3.0f));
+		trees.push_back(spawn_massless(tree_model(), scenary_layer, -10.0f + i*2.0f, 0.0f, 1.0f, 3.0f));
 	}
 
-	flower = spawn_massless(flower_model(), scenary_layer - 0.09f, -2.5f, 0.25f, 1.0f, 1.0f);
+	flower = spawn_massless(flower_model(), scenary_layer - 0.09f, -2.5f, 0.0f, 1.0f, 1.0f);
 
 	player = spawn_body(player_model(), playable_layer, 0.0f, 3.0f, 1.0f, 1.0f, 2.0f);
 
@@ -54,11 +54,11 @@ Level1::~Level1()
 
 auto sync_physics_body(Entity* obj) {
 	return [obj](auto& level) {
-		const float physics_scaling = 1.1f;
+		//float physics_scaling = 1.1f;
 		auto& b = obj->body->position;
 		glm::vec3 new_pos;
-		new_pos[0] = b[0] * physics_scaling;
-		new_pos[1] = b[1] * physics_scaling;
+		new_pos[0] = b[0];
+		new_pos[1] = b[1];
 		new_pos[2] = 0.0f;
 		obj->transform.position = new_pos;
 		//std::cout << "Picture is at " << obj->transform.position[0] << " "<< obj->transform.position[1] << "\n";
@@ -75,18 +75,19 @@ auto camera_track_object(Camera& c, Entity* obj) {
 
 auto scale_with_y_position(Entity* affected, Entity* source) {
 	return [=](auto& level) {
-		auto scaling = abs(source->transform.position[1] + 1.0f);
+		auto scaling = abs(source->transform.position[1]);
 		//affected->transform.scale[0] = scaling;
 		affected->transform.scale[1] = scaling;
+		affected->transform.position[1] = scaling - 0.5f;
 	};
 }
 
 auto scale_group_with_x_position(std::vector<Entity*>& affected, Entity* source) {
 	return[=](auto& level) {
-		auto scaling = 2.25f * abs(glm::sin(source->transform.position[0])) + 1.0f;
+		auto scaling = 2.25f * abs(glm::sin(source->transform.position[0]));
 		for (auto entity : affected) {
 			entity->transform.scale[1] = scaling;
-			entity->transform.position[1] = scaling - 1.0f;
+			entity->transform.position[1] = scaling/4;
 		}
 	};
 }

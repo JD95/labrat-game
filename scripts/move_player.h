@@ -25,12 +25,14 @@ struct move_player {
 
 		case  SDLK_a:
 			if(!key_hold)
-				player->body->velocity += glm::vec2(-4.0f, 0.0f);
+				player->body->velocity += glm::vec2(-2.0f, 0.0f);
+			std::cout << "Moving left...\n";
 			break;
 
 		case SDLK_d:
 			if (!key_hold)
-				player->body->velocity += glm::vec2(4.0f, 0.0f);
+				player->body->velocity += glm::vec2(2.0f, 0.0f);
+			std::cout << "Moving right...\n";
 			break;
 
 		default: break;
