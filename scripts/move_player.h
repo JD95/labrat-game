@@ -25,12 +25,12 @@ struct move_player {
 
 		case  SDLK_a:
 			if(!key_hold)
-				player->body->velocity += glm::vec2(-2.0f, 0.0f);
+				player->body->velocity += glm::vec2(-4.0f, 0.0f);
 			break;
 
 		case SDLK_d:
 			if (!key_hold)
-				player->body->velocity += glm::vec2(2.0f, 0.0f);
+				player->body->velocity += glm::vec2(4.0f, 0.0f);
 			break;
 
 		default: break;
@@ -43,11 +43,8 @@ struct move_player {
 		switch (e.key.keysym.sym)
 		{
 		case  SDLK_a:
-			player->body->velocity -= glm::vec2(-2.0f, 0.0f);
-			break;
-
 		case SDLK_d:
-			player->body->velocity -= glm::vec2(2.0f, 0.0f);
+			player->body->velocity = glm::vec2(0.0f, 0.0f);
 			break;
 
 		default: break;

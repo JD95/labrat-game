@@ -26,3 +26,15 @@ inline auto ground_model() {
 inline auto friend_model() {
 	return basic_model("labrat-game/friend.png");
 }
+
+inline auto flower_model() {
+	return basic_model("labrat-game/flower.png");
+}
+
+inline auto spacebackground_model() {
+	return basic_model("labrat-game/spacebackground.png");
+}
+
+inline auto tree_model() {
+	return basic_model("labrat-game/tree.png");
+}
