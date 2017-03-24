@@ -18,15 +18,25 @@ const float playable_layer = 0.0f;
 struct Level1 : public SceneState
 {
 	Reactive<Camera> main_camera;
-	Entity* ground;
+
+	// Platforms
+	Entity* rising_platform;
 	Entity* start_wall;
-	Entity* player;
+	Entity* platform1;
+	Entity* platform2;
+
+	// Units
 	Entity* friend_bot1;
 	Entity* friend_bot2;
-	Entity* flower;
-	Entity* background;
-	std::vector<Entity*> trees;
+	Entity* player;
 
+	// props
+	std::vector<Entity*> trees;
+	Entity* background;
+	Entity* flower;
+	Entity* goal_sign;
+
+	// stateful updates
 	move_player<Level1> controls;
 
 	Level1();

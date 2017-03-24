@@ -38,3 +38,7 @@ inline auto spacebackground_model() {
 inline auto tree_model() {
 	return basic_model("labrat-game/tree.png");
 }
+
+inline auto goal_sign_model() {
+	return basic_model("labrat-game/goalsign.png");
+}
