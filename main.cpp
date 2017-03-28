@@ -12,6 +12,9 @@
 #include "../labrat/reactive/reactive.h"
 #include "../labrat/utilities/SlotMap.h"
 #include "../labrat/entity/entity.h"
+
+#include "../labrat/reactive/source.h"
+
 #include "Level1.h"
 
 using std::vector;
@@ -61,11 +64,32 @@ void test_slotmap() {
 	system("pause");
 }
 
+void test_reactive_values() {
+	ReactiveVal<int> x(5);
+	ReactiveVal<int> y(5);
+	ReactiveVal<int> z(0);
+
+	auto source = 
+		from(x, y)
+		.use([](int x, int y) { return x + y; })
+		.determine(z);
+
+	source.update();
+	std::cout << z.value << std::endl;
+
+	x = 0;
+
+	source.update();
+	std::cout << z.value << std::endl;
+}
 
 int main(int argc, char *argv[])
 {
-	//test_slotmap();
-	Game<Level1> super_alpha(std::string("labrat Engine - Super Alpha"), 1080,720);
-	super_alpha.game();
+	////test_slotmap();
+	//Game<Level1> super_alpha(std::string("labrat Engine - Super Alpha"), 1080,720);
+	//super_alpha.game();
+
+	test_reactive_values();
+
 	return 0;
 }
