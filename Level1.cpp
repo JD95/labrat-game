@@ -33,9 +33,9 @@ Level1::Level1()
 	goal_sign = spawn_massless(goal_sign_model(), scenary_layer, 2.0, -0.5, 3.0f, 3.0f);
 
 	// Platforms 
-	platform1 = spawn_body(ground_model(), playable_layer, 0.0f, -1.0f, 5.0f, 1.0f, 0.0f);
-	rising_platform = spawn_body(ground_model(), playable_layer, 4.0f, -1.0f, 2.0f, 1.0f, 0.0f);
-	platform2 = spawn_body(ground_model(), playable_layer, 8.0f, -1.0f, 5.0f, 1.0f, 0.0f);
+	platform1 = spawn_body(ground_model(), playable_layer, 0.0f, -1.0f, 20.0f, 1.0f, 0.0f);
+	//rising_platform = spawn_body(ground_model(), playable_layer, 4.0f, -1.0f, 2.0f, 1.0f, 0.0f);
+	//platform2 = spawn_body(ground_model(), playable_layer, 8.0f, -1.0f, 5.0f, 1.0f, 0.0f);
 
 
 	// Units
@@ -105,8 +105,8 @@ void Level1::construct_updates(vector<update_t<Level1&>>& updates, const vector<
 
 	// Environment
 	updates.push_back(sync_physics_body(platform1));
-	updates.push_back(sync_physics_body(platform2));
-	updates.push_back(sync_physics_body(rising_platform));
+	//updates.push_back(sync_physics_body(platform2));
+	//updates.push_back(sync_physics_body(rising_platform));
 
 	// Units
 	updates.push_back(sync_physics_body(player));
@@ -116,5 +116,5 @@ void Level1::construct_updates(vector<update_t<Level1&>>& updates, const vector<
 	// Reactive Effects
 	updates.push_back(scale_with_y_position(flower, player));
 	updates.push_back(scale_group_with_x_position(trees, player));
-	updates.push_back(rise_with_x_position(rising_platform, player));
+	//updates.push_back(rise_with_x_position(rising_platform, player));
 }
