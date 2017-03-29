@@ -64,22 +64,30 @@ void test_slotmap() {
 	system("pause");
 }
 
+int test(int x, int y) { return x + y; }
+
 void test_reactive_values() {
 	ReactiveVal<int> x(5);
 	ReactiveVal<int> y(5);
 	ReactiveVal<int> z(0);
 
+	DependencyList<> ds;
+
 	auto source = 
 		from(x, y)
 		.use([](int x, int y) { return x + y; })
 		.determine(z);
+	
+	auto ds_next = ds.insert(source);
 
-	source.update();
+	ds_next.calculate();
+	ds_next.update();
 	std::cout << z.value << std::endl;
 
 	x = 0;
 
-	source.update();
+	ds_next.calculate();
+	ds_next.update();
 	std::cout << z.value << std::endl;
 }
 
