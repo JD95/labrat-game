@@ -29,7 +29,7 @@ Level1::Level1()
 	for (int i = 0; i < 3; i++)
 		trees.push_back(spawn_massless(tree_model(), scenary_layer, -2.25f + i*1.5f, 0.0f, 1.0f, 1.0f));
 
-	flower = spawn_massless(flower_model(), scenary_layer - 0.09f, -2.5f, 0.0f, 1.0f, 1.0f);
+	flower = spawn_massless(flower_model(), scenary_layer + 0.1f, -2.5f, 0.0f, 1.0f, 1.0f);
 	goal_sign = spawn_massless(goal_sign_model(), scenary_layer, 2.0, -0.5, 3.0f, 3.0f);
 	
 
