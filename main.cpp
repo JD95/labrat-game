@@ -71,24 +71,31 @@ void test_reactive_values() {
 	ReactiveVal<int> y(5);
 	ReactiveVal<int> z(0);
 
-	DependencyList<> ds;
+	ReactiveVal<std::string> foo("foo");
+	ReactiveVal<std::string> bar("bar");
 
 	auto source = 
 		from(x, y)
 		.use([](int x, int y) { return x + y; })
 		.determine(z);
-	
-	auto ds_next = ds.insert(source);
 
-	ds_next.calculate();
-	ds_next.update();
-	std::cout << z.value << std::endl;
+	auto str_source =
+		from(foo, bar)
+		.use([](std::string f, std::string b) { return f + b; })
+		.determine(foo);
 
-	x = 0;
+	auto ds = DependencyList<>()
+		.insert(source)
+		.insert(str_source);
 
-	ds_next.calculate();
-	ds_next.update();
-	std::cout << z.value << std::endl;
+	while (true) {
+		x = 0;
+		ds.calculate();
+		ds.update();
+		std::cout << z.value << std::endl;
+		std::cout << foo.value << std::endl;
+		system("pause");
+	}
 }
 
 int main(int argc, char *argv[])
@@ -96,6 +103,8 @@ int main(int argc, char *argv[])
 	//test_slotmap();
 	Game<Level1> super_alpha(std::string("labrat Engine - Super Alpha"), 1080,720);
 	super_alpha.game();
+
+	//test_reactive_values();
 
 	return 0;
 }
