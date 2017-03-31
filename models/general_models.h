@@ -42,3 +42,7 @@ inline auto tree_model() {
 inline auto goal_sign_model() {
 	return basic_model("labrat-game/goalsign.png");
 }
+
+inline auto levelcomplete_model() {
+	return basic_model("labrat-game/levelcomplete.png");
+}

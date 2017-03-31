@@ -31,17 +31,20 @@ Level1::Level1()
 
 	flower = spawn_massless(flower_model(), scenary_layer - 0.09f, -2.5f, 0.0f, 1.0f, 1.0f);
 	goal_sign = spawn_massless(goal_sign_model(), scenary_layer, 2.0, -0.5, 3.0f, 3.0f);
+	
 
 	// Platforms 
-	platform1 = spawn_body(ground_model(), playable_layer, 0.0f, -1.0f, 20.0f, 1.0f, 0.0f);
-	//rising_platform = spawn_body(ground_model(), playable_layer, 4.0f, -1.0f, 2.0f, 1.0f, 0.0f);
-	//platform2 = spawn_body(ground_model(), playable_layer, 8.0f, -1.0f, 5.0f, 1.0f, 0.0f);
+	platform1 = spawn_body(ground_model(), playable_layer, 0.0f, -1.0f, 5.0f, 1.0f, 0.0f);
+	rising_platform = spawn_body(ground_model(), playable_layer, 4.0f, -1.0f, 2.0f, 1.0f, 0.0f);
+	platform2 = spawn_body(ground_model(), playable_layer, 8.0f, -1.0f, 5.0f, 1.0f, 0.0f);
 
 
 	// Units
 	player = spawn_body(player_model(), playable_layer, 0.0f, 3.0f, 1.0f, 1.0f, 2.0f);
 	friend_bot1 = spawn_body(friend_model(), playable_layer, 3.5f, 2.0f, 0.5f, 0.5f, 1.0f);
 	friend_bot2 = spawn_body(friend_model(), playable_layer, -3.0f, 3.0f, 0.5f, 0.5f, 1.0f);
+
+	level_complete_sign = spawn_massless(levelcomplete_model(), -10.0f, 0.0f, 0.0f, 5.0f, 5.0f);
 }
 
 
@@ -66,6 +69,13 @@ auto camera_track_object(Camera& c, Entity* obj) {
 		c.focus = obj->transform.position;
 		c.position[0] = obj->transform.position[0];
 		c.position[1] = obj->transform.position[1];
+	};
+}
+
+auto track_object(Entity* o, Entity* other) {
+	return [o, other](auto& level) {
+		o->transform.position[0] = other->transform.position[0];
+		o->transform.position[1] = other->transform.position[1];
 	};
 }
 
@@ -96,17 +106,26 @@ auto rise_with_x_position(Entity* affected, Entity* source) {
 	};
 }
 
+auto be_visible__when_player_on_goal_platform(Entity* sign, Entity* player) {
+	return [=](auto& level) {
+		if (player->transform.position[0] > 6) {
+			sign->transform.position[2] = 1.0f;
+		}
+	};
+}
+
 void Level1::construct_updates(vector<update_t<Level1&>>& updates, const vector<SDL_Event>& keyboard_events, const Level1& prev) {
 	if (keyboard_events.size() > 0)
 		updates.push_back(controls(player, keyboard_events));
 	
 	// Sync the images with the physics bodies
 	updates.push_back(camera_track_object(main_camera, player));
+	updates.push_back(track_object(level_complete_sign, player));
 
 	// Environment
 	updates.push_back(sync_physics_body(platform1));
-	//updates.push_back(sync_physics_body(platform2));
-	//updates.push_back(sync_physics_body(rising_platform));
+	updates.push_back(sync_physics_body(platform2));
+	updates.push_back(sync_physics_body(rising_platform));
 
 	// Units
 	updates.push_back(sync_physics_body(player));
@@ -116,5 +135,6 @@ void Level1::construct_updates(vector<update_t<Level1&>>& updates, const vector<
 	// Reactive Effects
 	updates.push_back(scale_with_y_position(flower, player));
 	updates.push_back(scale_group_with_x_position(trees, player));
-	//updates.push_back(rise_with_x_position(rising_platform, player));
+	updates.push_back(rise_with_x_position(rising_platform, player));
+	updates.push_back(be_visible__when_player_on_goal_platform(level_complete_sign, player));
 }

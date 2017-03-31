@@ -35,6 +35,7 @@ struct Level1 : public SceneState
 	Entity* background;
 	Entity* flower;
 	Entity* goal_sign;
+	Entity* level_complete_sign;
 
 	// stateful updates
 	move_player<Level1> controls;
