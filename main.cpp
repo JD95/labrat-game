@@ -15,7 +15,7 @@
 
 #include "../labrat/reactive/source.h"
 
-#include "Level1.h"
+#include "Level1/Level1.h"
 
 using std::vector;
 using std::function;
