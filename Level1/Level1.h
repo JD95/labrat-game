@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include <vector>
+#include <memory>
 
 #include "../../labrat/entity/entity.h"
 #include "../../labrat/scene/SceneState.h"
@@ -17,19 +18,15 @@
 
 struct Level1 : public SceneState
 {
-	Reactive<Camera> main_camera;
 	Level1World game_world;
 	GUI gui;
 
 	// stateful updates
-	move_player<Level1> controls;
+	move_player controls;
 
 	Level1();
 	~Level1();
-	void construct_updates(
-		vector<update_t<Level1&>>& updates, 
-		const vector<SDL_Event>& keyboard_events, 
-		const Level1& prev);
+	void construct_updates(vector<std::unique_ptr<Updater>>& updates);
 };
 
 

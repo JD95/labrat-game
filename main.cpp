@@ -67,12 +67,12 @@ void test_slotmap() {
 int test(int x, int y) { return x + y; }
 
 void test_reactive_values() {
-	ReactiveVal<int> x(5);
-	ReactiveVal<int> y(5);
-	ReactiveVal<int> z(0);
+	Reactive<int> x(5);
+	Reactive<int> y(5);
+	Reactive<int> z(0);
 
-	ReactiveVal<std::string> foo("foo");
-	ReactiveVal<std::string> bar("bar");
+	Reactive<std::string> foo("foo");
+	Reactive<std::string> bar("bar");
 
 	auto source = 
 		from(x, y)
@@ -84,14 +84,15 @@ void test_reactive_values() {
 		.use([](std::string f, std::string b) { return f + b; })
 		.determine(foo);
 
-	auto ds = DependencyList<>()
-		.insert(source)
-		.insert(str_source);
+	std::vector<std::unique_ptr<Updater>> ds;
+
+	ds.push_back(std::move(source));
+	ds.push_back(std::move(str_source));
 
 	while (true) {
 		x = 0;
-		ds.calculate();
-		ds.update();
+		for(auto& d : ds) d->calculate();
+		for (auto& d : ds) d->update();
 		std::cout << z.value << std::endl;
 		std::cout << foo.value << std::endl;
 		system("pause");
