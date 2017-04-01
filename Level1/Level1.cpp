@@ -32,6 +32,7 @@ auto sync_physics_body(Entity* obj) {
 
 auto camera_track_object(Reactive<Camera>& camera, Entity* object) {
 	return from(camera, object->transform.position)
+		// Ignore this error, its a false positive
 		.use([](Camera c, glm::vec3 position) {
 			c.focus = position;
 			c.position[0] = position[0];
@@ -78,8 +79,13 @@ auto camera_track_object(Reactive<Camera>& camera, Entity* object) {
 //}
 
 void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
+
+	// Physics syncing
 	updates.push_back(sync_physics_body(game_world.platform1));
 	updates.push_back(sync_physics_body(game_world.player));
+	updates.push_back(sync_physics_body(game_world.friend_bot1));
+	updates.push_back(sync_physics_body(game_world.friend_bot2));
+
 	updates.push_back(camera_track_object(main_camera, game_world.player));
 	updates.push_back(controls(game_world.player, keyboard_events));
 }

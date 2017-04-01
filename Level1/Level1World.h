@@ -19,8 +19,8 @@ struct Level1World
 	Entity* platform2;
 
 	// Units
-	//Entity* friend_bot1;
-	//Entity* friend_bot2;
+	Entity* friend_bot1;
+	Entity* friend_bot2;
 	Entity* player;
 
 	// props

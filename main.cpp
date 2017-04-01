@@ -102,10 +102,10 @@ void test_reactive_values() {
 int main(int argc, char *argv[])
 {
 	//test_slotmap();
-	Game<Level1> super_alpha(std::string("labrat Engine - Super Alpha"), 1080,720);
-	super_alpha.game();
+	//Game<Level1> super_alpha(std::string("labrat Engine - Super Alpha"), 1080,720);
+	//super_alpha.game();
 
-	//test_reactive_values();
+	test_reactive_values();
 
 	return 0;
 }

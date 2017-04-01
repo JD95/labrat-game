@@ -45,7 +45,7 @@ struct move_player {
 		{
 		case  SDLK_a:
 		case SDLK_d:
-			//body->velocity = glm::vec2(0.0f, 0.0f);
+			body->velocity = glm::vec2(0.0f, 0.0f);
 			break;
 
 		default: break;
@@ -57,6 +57,7 @@ struct move_player {
 	auto operator()(Entity* object, Reactive<std::vector<SDL_Event>>& events) {
 
 		return from(object->body, events)
+			// Ignore this error, its a false positive
 			.use([this](PhysObj* body, std::vector<SDL_Event> events) {
 
 				// Negative because we are moving the world not the camera
