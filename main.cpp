@@ -213,9 +213,9 @@ void test_reactive_values() {
 
 int main(int argc, char *argv[])
 {
-	play_audio();
-	/*Game<Level1> super_alpha(std::string("labrat Engine - Super Alpha"), 1080,720);
-	super_alpha.game();*/
+	//play_audio();
+	Game<Level1> super_alpha(std::string("labrat Engine - Super Alpha"), 1080,720);
+	super_alpha.game();
 
 	return 0;
 }
