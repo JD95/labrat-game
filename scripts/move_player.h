@@ -16,11 +16,11 @@ struct move_player {
 
 	move_player() {}
 
-	void key_down(PhysObj* body, SDL_Event e) {
+	void key_down(PhysObj* body, SDL_Event e, glm::vec2 grav_norm) {
 		switch (e.key.keysym.sym)
 		{
 		case SDLK_SPACE:
-			if (body->velocity[1] <= 0)
+			if (std::find(std::begin(body->normals_acting), std::end(body->normals_acting), grav_norm) != body->normals_acting.end())
 				body->velocity += glm::vec2(0.0f, 5.0f);
 			break;
 
@@ -54,21 +54,21 @@ struct move_player {
 		key_hold = false;
 	}
 
-	auto operator()(Entity* object, Reactive<std::vector<SDL_Event>>& events) {
+	auto operator()(Entity* object, Reactive<std::vector<SDL_Event>>& events, glm::vec2 grav_norm) {
 
 		return from(object->body, events)
 			// Ignore this error, its a false positive
-			.use([this](PhysObj* body, std::vector<SDL_Event> events) {
+			.use([this, grav_norm](PhysObj* body, std::vector<SDL_Event> events) {
 
 				// Negative because we are moving the world not the camera
 				const float camera_speed = 0.05f;
 
 				for (auto& e : events) {
 					if (e.type == SDL_KEYDOWN) {
-						key_down(body, e);
+						key_down(body, e, grav_norm);
 					}
 					else {
-						key_up(body, e);
+						key_up(body, e); 
 					}
 				}
 

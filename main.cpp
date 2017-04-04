@@ -6,7 +6,7 @@
 #include <vector>
 #include <glm.hpp>
 #include <SDL.h>
-#include <SDL_mixer.h>
+//#include <SDL_mixer.h>
 #include <thread>
 #include <chrono>
 
@@ -24,113 +24,113 @@
 using std::vector;
 using std::function;
 
-#define NUM_WAVEFORMS 1
-const char* _waveFileNames[] =
-{
-	"D:/Current_Project/labrat/OpenGL Wrapper/track.wav"
-};
-
-Mix_Chunk* _sample[2];
-
-// Initializes the application data
-int Init(void)
-{
-	memset(_sample, 0, sizeof(Mix_Chunk*) * 2);
-
-	// Set up the audio stream
-	int result = Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 512);
-	if (result < 0)
-	{
-		fprintf(stderr, "Unable to open audio: %s\n", SDL_GetError());
-		exit(-1);
-	}
-
-	result = Mix_AllocateChannels(4);
-	if (result < 0)
-	{
-		fprintf(stderr, "Unable to allocate mixing channels: %s\n", SDL_GetError());
-		exit(-1);
-	}
-
-	// Load waveforms
-	for (int i = 0; i < NUM_WAVEFORMS; i++)
-	{
-		_sample[i] = Mix_LoadWAV(_waveFileNames[i]);
-		if (_sample[i] == NULL)
-		{
-			fprintf(stderr, Mix_GetError(), _waveFileNames[i]);
-		}
-	}
-
-	return true;
-}
-
-int play_audio() {
-
-	// Initialize the SDL library with the Video subsystem
-		SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-		atexit(SDL_Quit);
-
-		SDL_Window* window = SDL_CreateWindow("DrumPads",
-			SDL_WINDOWPOS_UNDEFINED,
-			SDL_WINDOWPOS_UNDEFINED,
-			256,
-			256,
-			SDL_WINDOW_RESIZABLE);
-
-		// Application specific Initialize of data structures
-		if (Init() == false)
-			return -1;
-
-		// Event descriptor
-		SDL_Event Event;
-
-		bool done = false;
-		while (!done)
-		{
-			int gotEvent = SDL_PollEvent(&Event);
-
-			while (!done && gotEvent)
-			{
-				switch (Event.type)
-				{
-				case SDL_KEYDOWN:
-					switch (Event.key.keysym.sym)
-					{
-					case 'q':
-						Mix_PlayChannel(-1, _sample[0], 0);
-						break;
-					case 'w':
-						Mix_PlayChannel(-1, _sample[1], 0);
-						break;
-					default:
-						break;
-					}
-					break;
-
-				case SDL_QUIT:
-					done = true;
-					break;
-
-				default:
-					break;
-				}
-				if (!done) gotEvent = SDL_PollEvent(&Event);
-			}
-			using namespace std::chrono_literals;
-			std::this_thread::sleep_for(2s);
-
-		}
-
-		for (int i = 0; i < NUM_WAVEFORMS; i++)
-		{
-			Mix_FreeChunk(_sample[i]);
-		}
-
-		Mix_CloseAudio();
-		SDL_Quit();
-		return 0;
-}
+//#define NUM_WAVEFORMS 1
+//const char* _waveFileNames[] =
+//{
+//	"D:/Current_Project/labrat/OpenGL Wrapper/track.wav"
+//};
+//
+//Mix_Chunk* _sample[2];
+//
+//// Initializes the application data
+//int Init(void)
+//{
+//	memset(_sample, 0, sizeof(Mix_Chunk*) * 2);
+//
+//	// Set up the audio stream
+//	int result = Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 512);
+//	if (result < 0)
+//	{
+//		fprintf(stderr, "Unable to open audio: %s\n", SDL_GetError());
+//		exit(-1);
+//	}
+//
+//	result = Mix_AllocateChannels(4);
+//	if (result < 0)
+//	{
+//		fprintf(stderr, "Unable to allocate mixing channels: %s\n", SDL_GetError());
+//		exit(-1);
+//	}
+//
+//	// Load waveforms
+//	for (int i = 0; i < NUM_WAVEFORMS; i++)
+//	{
+//		_sample[i] = Mix_LoadWAV(_waveFileNames[i]);
+//		if (_sample[i] == NULL)
+//		{
+//			fprintf(stderr, Mix_GetError(), _waveFileNames[i]);
+//		}
+//	}
+//
+//	return true;
+//}
+//
+//int play_audio() {
+//
+//	// Initialize the SDL library with the Video subsystem
+//		SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+//		atexit(SDL_Quit);
+//
+//		SDL_Window* window = SDL_CreateWindow("DrumPads",
+//			SDL_WINDOWPOS_UNDEFINED,
+//			SDL_WINDOWPOS_UNDEFINED,
+//			256,
+//			256,
+//			SDL_WINDOW_RESIZABLE);
+//
+//		// Application specific Initialize of data structures
+//		if (Init() == false)
+//			return -1;
+//
+//		// Event descriptor
+//		SDL_Event Event;
+//
+//		bool done = false;
+//		while (!done)
+//		{
+//			int gotEvent = SDL_PollEvent(&Event);
+//
+//			while (!done && gotEvent)
+//			{
+//				switch (Event.type)
+//				{
+//				case SDL_KEYDOWN:
+//					switch (Event.key.keysym.sym)
+//					{
+//					case 'q':
+//						Mix_PlayChannel(-1, _sample[0], 0);
+//						break;
+//					case 'w':
+//						Mix_PlayChannel(-1, _sample[1], 0);
+//						break;
+//					default:
+//						break;
+//					}
+//					break;
+//
+//				case SDL_QUIT:
+//					done = true;
+//					break;
+//
+//				default:
+//					break;
+//				}
+//				if (!done) gotEvent = SDL_PollEvent(&Event);
+//			}
+//			using namespace std::chrono_literals;
+//			std::this_thread::sleep_for(2s);
+//
+//		}
+//
+//		for (int i = 0; i < NUM_WAVEFORMS; i++)
+//		{
+//			Mix_FreeChunk(_sample[i]);
+//		}
+//
+//		Mix_CloseAudio();
+//		SDL_Quit();
+//		return 0;
+//}
 
 void print_id_list(SlotMap<Entity>& entities) {
 	std::cout << "In use ID's\n";

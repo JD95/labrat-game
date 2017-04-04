@@ -79,6 +79,7 @@ auto camera_track_object(Reactive<Camera>& camera, Entity* object) {
 //}
 
 void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
+	glm::vec2 grav_normal = get_grav_norm();
 
 	// Physics syncing
 	updates.push_back(sync_physics_body(game_world.platform1));
@@ -87,5 +88,5 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	updates.push_back(sync_physics_body(game_world.friend_bot2));
 
 	updates.push_back(camera_track_object(main_camera, game_world.player));
-	updates.push_back(controls(game_world.player, keyboard_events));
+	updates.push_back(controls(game_world.player, keyboard_events, grav_normal));
 }
