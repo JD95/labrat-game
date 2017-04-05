@@ -16,7 +16,7 @@ Level1::Level1()
 	, gui(*this) 
 {
 	main_camera = Camera(glm::vec3(0.0f, -1.0f, 5.0f)		// Position
-		, glm::vec3(0.0, 0.5f, -10.0f)	// Focus
+		, glm::vec3(0.0, 0.5f, -20.0f)	// Focus
 		, glm::vec3(0, 1.0f, 0));		// Up
 }
 
