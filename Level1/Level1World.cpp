@@ -22,7 +22,7 @@ Level1World::Level1World(SceneState& state)
 
 
 	// Units
-	player = state.spawn_body(player_model(), playable_layer, 0.0f, 3.0f, 1.0f, 1.0f, 2.0f);
+	player = state.spawn_body(player_model(), playable_layer, 0.0f, 1.0f, 1.0f, 1.0f, 2.0f);
 
 	friend_bot1 = state.spawn_body(friend_model(), playable_layer, 3.5f, 2.0f, 0.5f, 0.5f, 1.0f);
 	friend_bot2 = state.spawn_body(friend_model(), playable_layer, -3.0f, 3.0f, 0.5f, 0.5f, 1.0f);
