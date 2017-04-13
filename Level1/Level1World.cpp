@@ -16,18 +16,15 @@ Level1World::Level1World(SceneState& state)
 
 
 	// Platforms 
-	platform1 = state.spawn_body(ground_model(), playable_layer, 0.0f, -1.0f, 20.0f, 1.0f, 0.0f);
-	//rising_platform = state.spawn_body(ground_model(), playable_layer, 4.0f, -1.0f, 2.0f, 1.0f, 0.0f);
-	//platform2 = state.spawn_body(ground_model(), playable_layer, 8.0f, -1.0f, 5.0f, 1.0f, 0.0f);
+	platform1 = state.spawn_body(ground_model(), playable_layer, 0.0f, -1.0f, 5.0f, 1.0f, 0.0f);
+	rising_platform = state.spawn_body(ground_model(), playable_layer, 6.0f, -1.0f, 2.0f, 1.0f, 0.0f);
+	platform2 = state.spawn_body(ground_model(), playable_layer, 9.0f, -1.0f, 5.0f, 1.0f, 0.0f);
 
 
 	// Units
 	player = state.spawn_body(player_model(), playable_layer, 0.0f, 1.0f, 1.0f, 1.0f, 2.0f);
 
-	friend_bot1 = state.spawn_body(friend_model(), playable_layer, 3.5f, 2.0f, 0.5f, 0.5f, 1.0f);
-	friend_bot2 = state.spawn_body(friend_model(), playable_layer, -3.0f, 3.0f, 0.5f, 0.5f, 1.0f);
-
-	//level_complete_sign = state.spawn_massless(levelcomplete_model(), -10.0f, 0.0f, 0.0f, 5.0f, 5.0f);
+	
 }
 
 

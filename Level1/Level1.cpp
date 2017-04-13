@@ -26,7 +26,22 @@ Level1::~Level1()
 
 auto sync_physics_body(Entity* obj) {
 	return from(obj->body)
-		.use([](PhysObj* b) { return glm::vec3(b->position[0],b->position[1],0.0f); })
+		.use([](PhysObj* b) { 
+
+			if (b->shape.type == 1) {
+				auto shape = b->shape.get_coll().Rect;
+				// Adjusting the model to the "center" of the shape
+				auto x = b->position[0];// +(0.5f * shape.width);
+				auto y = b->position[1];// +(0.5f * shape.height);
+				
+				//if (x < 0) std::cout << "PASSED THE ORIGIN!!!\n";
+
+				return glm::vec3(x, y, 0.0f);
+			}
+
+			return glm::vec3(b->position[0], b->position[1], 0.0f);
+			
+		})
 		.determine(obj->transform.position);
 }
 
@@ -65,11 +80,14 @@ auto camera_track_object(Reactive<Camera>& camera, Entity* object) {
 //	return affected;
 //}
 
-//auto rise_with_x_position(PhysObj* affected, PhysObj* source) {
-//	auto d = glm::distance(affected->position[0], source->position[0]);
-//	affected->position[1] = (-1.25f * d) - 1.0f;
-//	return affected;
-//}
+auto rise_with_x_position(Entity* affected, Entity* source) {
+	return from(affected->body, source->body)
+		.use([](PhysObj* a, PhysObj* s) { 
+			auto d = glm::distance(a->position[0], s->position[0]);
+			a->position[1] = (-0.5f * d);
+			return a; })
+		.determine(affected->body);
+}
 //
 //auto be_visible__when_player_on_goal_platform(Transform sign, Transform player) {
 //	if (player.position[0] > 6) {
@@ -84,9 +102,12 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	// Physics syncing
 	updates.push_back(sync_physics_body(game_world.platform1));
 	updates.push_back(sync_physics_body(game_world.player));
-	updates.push_back(sync_physics_body(game_world.friend_bot1));
-	updates.push_back(sync_physics_body(game_world.friend_bot2));
+	updates.push_back(sync_physics_body(game_world.rising_platform));
 
 	updates.push_back(camera_track_object(main_camera, game_world.player));
 	updates.push_back(controls(game_world.player, keyboard_events, grav_normal));
+
+	updates.push_back(rise_with_x_position(game_world.rising_platform, game_world.player));
+
+
 }
