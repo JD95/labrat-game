@@ -21,17 +21,25 @@ struct move_player {
 		{
 		case SDLK_SPACE:
 			if (std::find(std::begin(body->normals_acting), std::end(body->normals_acting), grav_norm) != body->normals_acting.end())
-				body->force += glm::vec2(0.0,22.0);//velocity += glm::vec2(0.0f, 5.0f);
+				body->velocity += glm::vec2(body->velocity.x/2, 3.0f);
 			break;
 
 		case  SDLK_a:
-			if(!key_hold)
-				body->velocity += glm::vec2(-2.0f, 0.0f);
+			//if (!key_hold)
+			{
+				body->velocity = glm::vec2(-2.0f, body->velocity.y);
+				body->dynamic_friction = .1;
+				body->static_friction = 1;
+			}
 			break;
 
 		case SDLK_d:
-			if (!key_hold)
-				body->velocity += glm::vec2(2.0f, 0.0f);
+			//if (!key_hold)
+			{
+				body->velocity = glm::vec2(2.0f, body->velocity.y);
+				body->dynamic_friction = .1;
+				body->static_friction = 1;
+			}
 			break;
 
 		default: break;
@@ -46,6 +54,8 @@ struct move_player {
 		case  SDLK_a:
 		case SDLK_d:
 			//body->velocity = glm::vec2(0.0f, 0.0f);
+			body->dynamic_friction = 0.3;
+			body->static_friction = 0.7;
 			break;
 
 		default: break;
