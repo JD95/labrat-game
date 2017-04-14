@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "../../labrat/entity/entity.h"
 #include "../../labrat/scene/SceneState.h"
 #include "../../labrat/scene/camera.h"
@@ -14,9 +16,8 @@
 struct Level1World
 {
 	// Platforms
-	Entity* rising_platform;
-	Entity* platform1;
-	Entity* platform2;
+	std::vector<Entity*> rising_platforms;
+	std::vector<Entity*> platforms;
 
 	// Units
 	Entity* friend_bot1;
@@ -25,10 +26,11 @@ struct Level1World
 
 	// props
 	//std::vector<Entity*> trees;
-	//Entity* background;
+	Entity* background;
+	Entity* lava;
 	//Entity* flower;
-	//Entity* goal_sign;
-	//Entity* level_complete_sign;
+	Entity* goal_sign;
+	Entity* level_complete_sign;
 
 	Level1World(SceneState& state);
 	~Level1World();

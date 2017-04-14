@@ -46,3 +46,7 @@ inline auto goal_sign_model() {
 inline auto levelcomplete_model() {
 	return basic_model("labrat-game/levelcomplete.png");
 }
+
+inline auto lava_model() {
+	return basic_model("labrat-game/lava.png");
+}

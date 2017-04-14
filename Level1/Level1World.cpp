@@ -4,25 +4,40 @@
 
 Level1World::Level1World(SceneState& state)
 {
-	//// Props
-	//	background = state.spawn(spacebackground_model(),
-	//		Transform(glm::vec3(0.0f, 0.0f, background_layer), glm::vec3(10.0f)));
-
 	//for (int i = 0; i < 3; i++)
-	//	trees.push_back(state.spawn_massless(tree_model(), scenary_layer, -2.25f + i*1.5f, 0.0f, 1.0f, 1.0f));
+	background = state.spawn_massless(spacebackground_model(), background_layer, 0.0f,0.0f,20.0f,20.0f);
 
-	//flower = state.spawn_massless(flower_model(), scenary_layer + 0.1f, -2.5f, 0.0f, 1.0f, 1.0f);
-	//goal_sign = state.spawn_massless(goal_sign_model(), scenary_layer, 2.0, -0.5, 3.0f, 3.0f);
+	lava = state.spawn_massless(lava_model(), 0.1f, 15.0f, 1.0f, 20.0f, 2.0f);
 
 
 	// Platforms 
-	platform1 = state.spawn_body(ground_model(), playable_layer, 0.0f, -1.0f, 5.0f, 1.0f, 0.0f);
-	rising_platform = state.spawn_body(ground_model(), playable_layer, 6.0f, -1.0f, 2.0f, 1.0f, 0.0f);
-	platform2 = state.spawn_body(ground_model(), playable_layer, 9.0f, -1.0f, 5.0f, 1.0f, 0.0f);
+	auto platform = [&state](float x, float y, float width, float height) {
+		return state.spawn_body(ground_model(), playable_layer,x,y,width,height, 0.0f);
+	};
+
+	// Static platforms
+	platforms.push_back(platform(0.0f, -1.0f, 10.0f, 1.0f));
+	platforms.push_back(platform(0.0f, 0.0f, 1.0f, 5.0f));
+	platforms.push_back(platform(10.0f, 0.55f, 5.0f, 0.25f));
+	platforms.push_back(platform(7.00f, 1.25f, 2.0f, 0.25f));
+	platforms.push_back(platform(4.25f, 1.55f, 2.0f, 0.25f));
+	platforms.push_back(platform(1.25f, 2.25f, 2.0f, 0.25f));
+	platforms.push_back(platform(4.25f, 3.00f, 2.0f, 0.25f));
+	platforms.push_back(platform(7.00f, 3.25f, 2.0f, 0.25f));
+	platforms.push_back(platform(10.0f, 4.00f, 10.0f, 0.25f));
+	platforms.push_back(platform(32.0f, 4.00f, 10.0f, 0.25f));
+
+	goal_sign = state.spawn_massless(goal_sign_model(), scenary_layer, 32.0f, 4.25f, 2.0f, 2.0f);
+
+	for (int i = 0; i < 3; i++)
+	{
+		rising_platforms.push_back(state.spawn_body(ground_model(), playable_layer, 21.0f + i*4.1f, 4.0f, 2.0f, 1.0f, 0.0f));
+	}
+	
 
 
 	// Units
-	player = state.spawn_body(player_model(), playable_layer, 0.0f, 1.0f, 1.0f, 1.0f, 2.0f);
+	player = state.spawn_body(player_model(), playable_layer, 1.0f, 1.0f, 0.5f, 0.5f, 2.0f);
 
 	
 }
