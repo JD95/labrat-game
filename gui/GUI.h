@@ -10,7 +10,10 @@
 
 class GUI
 {
-	Entity* austinSquare;
+	int current_hp;
+	float hp_x_position, hp_y_position;
+	std::vector<Entity*> hp_bar;
+	
 
 public:
 	GUI(SceneState& state);
