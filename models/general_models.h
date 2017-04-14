@@ -47,11 +47,11 @@ inline auto levelcomplete_model() {
 	return basic_model("labrat-game/levelcomplete.png");
 }
 
-<<<<<<< HEAD
+
 inline auto hp_segment_model() {
 	return basic_model("labrat-game/hpsegment1.png");
-=======
+}
+
 inline auto lava_model() {
 	return basic_model("labrat-game/lava.png");
->>>>>>> 3fc6f9ea6b3656c2321a27823b83aed53371142f
 }
