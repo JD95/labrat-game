@@ -79,6 +79,20 @@ auto rise_with_x_position(Entity* affected, Entity* source) {
 		.determine(affected->body);
 }
 
+auto respawn_player(Entity* player, GUI& gui) {
+
+	auto original_position = player->transform.position.value;
+
+	return from(player->body)
+		.use([original_position, &gui](PhysObj* body) {
+			if (body->position[0] > 20.0f && body->position[1] < 3.0f) {
+				gui.lose_hp();
+				body->position = original_position;
+			}
+			return body; })
+		.determine(player->body);
+}
+
 
 void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	glm::vec2 grav_normal = get_grav_norm();
@@ -100,5 +114,5 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	
 
 	updates.push_back(track_object_xy(game_world.background, game_world.player));
-
+	updates.push_back(respawn_player(game_world.player, gui));
 }

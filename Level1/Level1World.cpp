@@ -19,6 +19,7 @@ Level1World::Level1World(SceneState& state)
 	platforms.push_back(platform(0.0f, -1.0f, 10.0f, 1.0f));
 	platforms.push_back(platform(0.0f, 0.0f, 1.0f, 5.0f));
 	platforms.push_back(platform(10.0f, 0.55f, 5.0f, 0.25f));
+	platforms.push_back(platform(14.0f, 1.0f, 1.0f, 3.0f));
 	platforms.push_back(platform(7.00f, 1.25f, 2.0f, 0.25f));
 	platforms.push_back(platform(4.25f, 1.55f, 2.0f, 0.25f));
 	platforms.push_back(platform(1.25f, 2.25f, 2.0f, 0.25f));

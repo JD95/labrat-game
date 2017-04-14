@@ -10,13 +10,16 @@
 
 class GUI
 {
+	SceneState& level;
+
 	int current_hp;
 	float hp_x_position, hp_y_position;
 	std::vector<Entity*> hp_bar;
-	
 
 public:
 	GUI(SceneState& state);
 	~GUI();
+
+	void lose_hp();
 };
 
