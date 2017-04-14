@@ -15,43 +15,47 @@ inline auto basic_model(std::string filepath) {
 	} };
 }
 
+inline auto basic_asset_model(std::string filepath) {
+	return basic_model("labrat-game/assets/" + filepath);
+}
+
 inline auto player_model() {
-	return basic_model("labrat-game/player.png");
+	return basic_asset_model("player.png");
 }
 
 inline auto ground_model() {
-	return basic_model("labrat-game/ground.png");
+	return basic_asset_model("ground.png");
 }
 
 inline auto friend_model() {
-	return basic_model("labrat-game/friend.png");
+	return basic_asset_model("friend.png");
 }
 
 inline auto flower_model() {
-	return basic_model("labrat-game/flower.png");
+	return basic_asset_model("flower.png");
 }
 
 inline auto spacebackground_model() {
-	return basic_model("labrat-game/spacebackground.png");
+	return basic_asset_model("spacebackground.png");
 }
 
 inline auto tree_model() {
-	return basic_model("labrat-game/tree.png");
+	return basic_asset_model("tree.png");
 }
 
 inline auto goal_sign_model() {
-	return basic_model("labrat-game/goalsign.png");
+	return basic_asset_model("goalsign.png");
 }
 
 inline auto levelcomplete_model() {
-	return basic_model("labrat-game/levelcomplete.png");
+	return basic_asset_model("levelcomplete.png");
 }
 
 
 inline auto hp_segment_model() {
-	return basic_model("labrat-game/hpsegment1.png");
+	return basic_asset_model("hpsegment1.png");
 }
 
 inline auto lava_model() {
-	return basic_model("labrat-game/lava.png");
+	return basic_asset_model("lava.png");
 }
