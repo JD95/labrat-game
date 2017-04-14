@@ -23,7 +23,7 @@ struct move_player {
 		{
 		case SDLK_SPACE:
 			if (std::find(std::begin(body->normals_acting), std::end(body->normals_acting), grav_norm) != body->normals_acting.end())
-				body->velocity += glm::vec2(body->velocity.x/2.0f, 3.0f);
+				body->velocity += glm::vec2(body->velocity.x/2.0f, 5.0f);
 			break;
 
 		case  SDLK_a:

@@ -56,58 +56,49 @@ auto camera_track_object(Reactive<Camera>& camera, Entity* object) {
 		.determine(camera);
 }
 
-//auto track_object(Transform o, Transform other) {
-//	o.position[0] = other.position[0];
-//	o.position[1] = other.position[1];
-//	return o;
-//}
+auto track_object_xy(Entity* tracker, Entity* source) {
+	auto tracker_z = tracker->transform.position.value[2];
+	return from(source->transform.position)
+		.use([tracker_z](glm::vec3 p) { return glm::vec3(p[0], p[1], tracker_z); })
+		.determine(tracker->transform.position);
+}
 
-//auto scale_with_y_position(Transform affected, Transform source) {
-//	auto scaling = abs(source.position[1]);
-//	affected.scale[1] = scaling;
-//	affected.position[1] = scaling - 0.5f;
-//	return affected;
-//}
-
-// TODO: Group transforms
-//auto scale_group_with_x_position(std::vector<Entity*> affected, Entity* source) {
-//	auto scaling = abs(source->transform.position[0]);
-//	for (auto entity : affected) {
-//		entity->transform.scale[1] = scaling;
-//		entity->transform.position[1] = scaling - 0.5f;
-//	}
-//
-//	return affected;
-//}
 
 auto rise_with_x_position(Entity* affected, Entity* source) {
+
+	auto original_position = affected->body.value->position[1];
+
 	return from(affected->body, source->body)
-		.use([](PhysObj* a, PhysObj* s) { 
-			auto d = glm::distance(a->position[0], s->position[0]);
-			a->position[1] = (-0.5f * d);
+		.use([original_position](PhysObj* a, PhysObj* s) {
+		
+			if (s->position[0] < a->position[0]) {
+				auto d = glm::distance(a->position[0], s->position[0]);
+				a->position[1] = original_position + (-1.0f * d);
+			}
 			return a; })
 		.determine(affected->body);
 }
-//
-//auto be_visible__when_player_on_goal_platform(Transform sign, Transform player) {
-//	if (player.position[0] > 6) {
-//		sign.position[2] = 1.0f;
-//	}
-//	return sign;
-//}
+
 
 void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	glm::vec2 grav_normal = get_grav_norm();
 
 	// Physics syncing
-	updates.push_back(sync_physics_body(game_world.platform1));
+	for (auto platform : game_world.platforms)
+		updates.push_back(sync_physics_body(platform));
+
 	updates.push_back(sync_physics_body(game_world.player));
-	updates.push_back(sync_physics_body(game_world.rising_platform));
+
+	for (auto platform : game_world.rising_platforms) {
+		updates.push_back(sync_physics_body(platform));
+		updates.push_back(rise_with_x_position(platform, game_world.player));
+	}
 
 	updates.push_back(camera_track_object(main_camera, game_world.player));
 	updates.push_back(controls(game_world.player, keyboard_events, grav_normal));
 
-	updates.push_back(rise_with_x_position(game_world.rising_platform, game_world.player));
+	
 
+	updates.push_back(track_object_xy(game_world.background, game_world.player));
 
 }
