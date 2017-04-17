@@ -10,7 +10,7 @@
 #include "../../labrat/reactive/reactive.h"
 #include "../../labrat/reactive/source.h"
 
-const float player_move_speed = 3.0f;
+const float player_move_speed = 2.0f;
 
 struct move_player {
 
@@ -43,6 +43,8 @@ struct move_player {
 				body->static_friction = 1.0f;
 			}
 			break;
+		case SDLK_h:
+			std::cout << "paused!";
 
 		default: break;
 		}
