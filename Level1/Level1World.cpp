@@ -39,8 +39,8 @@ Level1World::Level1World(SceneState& state)
 
 	// Units
 	player = state.spawn_body(player_model(), playable_layer, 1.0f, 1.0f, 0.5f, 0.5f, 2.0f);
-
-	
+	player->model->sprite_box = glm::vec2(42.0f/256.0f, 52.0f/ 256.0f);
+	player->model->sprite_position.value[1] = 1.0f - (104.0f / 256.0f);
 }
 
 

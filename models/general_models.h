@@ -20,7 +20,7 @@ inline auto basic_asset_model(std::string filepath) {
 }
 
 inline auto player_model() {
-	return basic_asset_model("player.png");
+	return basic_asset_model("player_animated.png");
 }
 
 inline auto ground_model() {

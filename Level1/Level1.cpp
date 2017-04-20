@@ -93,6 +93,29 @@ auto respawn_player(Entity* player, GUI& gui) {
 		.determine(player->body);
 }
 
+auto animate(Reactive<Int64>& time, Entity* entity) {
+	auto sprite_box = entity->model->sprite_box;
+	return from(time, entity->model->sprite_position)
+		.use([sprite_box](Int64 t, glm::vec2 p) {
+			//std::cout << t << "\n";
+		const float x_step = 42.0f / 256.0f;
+		const float y_step = 52.0f / 256.0f;
+			if (t % 15 == 0) {
+				std::cout << p[0] << ", " << p[1] << "\n";
+				//std::cout << "Animation step!\n";
+				p[0] += x_step;
+				if (p[0] > 5.0f * x_step) {
+					p[0] = 0.0f;
+					p[1] -= y_step;
+				}
+				if (p[1] < -y_step) {
+					p[1] = 1.0f - (y_step);
+				}
+					
+			}
+			return p; })
+		.determine(entity->model->sprite_position);
+}
 
 void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	glm::vec2 grav_normal = get_grav_norm();
@@ -115,4 +138,6 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 
 	updates.push_back(track_object_xy(game_world.background, game_world.player));
 	updates.push_back(respawn_player(game_world.player, gui));
+
+	updates.push_back(animate(time, game_world.player));
 }
