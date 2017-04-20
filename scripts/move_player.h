@@ -30,8 +30,8 @@ struct move_player {
 			//if (!key_hold)
 			{
 				body->velocity = glm::vec2(-player_move_speed, body->velocity.y);
-				body->dynamic_friction = .1f;
-				body->static_friction = 1.0f;
+				body->dynamic_friction = .0f;
+				body->static_friction = .70f;
 			}
 			break;
 
@@ -39,8 +39,8 @@ struct move_player {
 			//if (!key_hold)
 			{
 				body->velocity = glm::vec2(player_move_speed, body->velocity.y);
-				body->dynamic_friction = .1f;
-				body->static_friction = 1.0f;
+				body->dynamic_friction = .0f;
+				body->static_friction = .70f;
 			}
 			break;
 		case SDLK_h:
