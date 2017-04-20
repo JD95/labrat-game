@@ -15,6 +15,19 @@ inline auto basic_model(std::string filepath) {
 	} };
 }
 
+inline auto repeating_texture_model(std::string filepath, GLfloat width, GLfloat height) {
+	return Model{
+		std::string("labrat-game/assets/" + filepath),
+		std::vector<VertexData2D> {
+		VertexData2D{ RGBA{ 0, height, 0, 255 },{ -1.0f, 1.00f }},
+			VertexData2D{ RGBA{ width, 0, 0, 255 },{ 1.00f, -1.00f } },
+			VertexData2D{ RGBA{ 0, 0, 0, 255 },{ -1.00f, -1.00f } },
+			VertexData2D{ RGBA{ 0, height, 255, 255 },{ -1.00f, 1.00f } },
+			VertexData2D{ RGBA{ width, 0, 255, 255 },{ 1.00f, -1.00f } },
+			VertexData2D{ RGBA{ width, height, 255, 255 },{ 1.00f, 1.00f } },
+	} };
+}
+
 inline auto basic_asset_model(std::string filepath) {
 	return basic_model("labrat-game/assets/" + filepath);
 }
@@ -23,8 +36,8 @@ inline auto player_model() {
 	return basic_asset_model("player_animated.png");
 }
 
-inline auto ground_model() {
-	return basic_asset_model("ground.png");
+inline auto ground_model(GLfloat width, GLfloat height) {
+	return repeating_texture_model("platformTile.png", width, height);
 }
 
 inline auto friend_model() {

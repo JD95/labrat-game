@@ -12,7 +12,7 @@ Level1World::Level1World(SceneState& state)
 
 	// Platforms 
 	auto platform = [&state](float x, float y, float width, float height) {
-		return state.spawn_body(ground_model(), playable_layer,x,y,width,height, 0.0f);
+		return state.spawn_body(ground_model(width, height), playable_layer,x,y,width,height, 0.0f);
 	};
 
 	// Static platforms
@@ -32,7 +32,7 @@ Level1World::Level1World(SceneState& state)
 
 	for (int i = 0; i < 3; i++)
 	{
-		rising_platforms.push_back(state.spawn_body(ground_model(), playable_layer, 21.0f + i*4.1f, 4.0f, 2.0f, 1.0f, 0.0f));
+		rising_platforms.push_back(state.spawn_body(ground_model(21.0f + i*4.1f, 4.0f), playable_layer, 21.0f + i*4.1f, 4.0f, 2.0f, 1.0f, 0.0f));
 	}
 	
 

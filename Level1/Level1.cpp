@@ -100,8 +100,8 @@ auto animate(Reactive<Int64>& time, Entity* entity) {
 			//std::cout << t << "\n";
 		const float x_step = 42.0f / 256.0f;
 		const float y_step = 52.0f / 256.0f;
-			if (t % 15 == 0) {
-				std::cout << p[0] << ", " << p[1] << "\n";
+			if (t % 1 == 0) {
+				//std::cout << p[0] << ", " << p[1] << "\n";
 				//std::cout << "Animation step!\n";
 				p[0] += x_step;
 				if (p[0] > 5.0f * x_step) {
