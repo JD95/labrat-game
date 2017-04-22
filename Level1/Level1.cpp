@@ -10,6 +10,7 @@
 #include "../../labrat/graphics/model.h"
 #include "../../labrat/opengl/vertexdata.h"
 #include "../../labrat/physics/PhysObj.h"
+#include "../../labrat/texture/SpriteSheet.h"
 
 Level1::Level1()
 	: game_world(*this)
@@ -94,27 +95,26 @@ auto respawn_player(Entity* player, GUI& gui) {
 }
 
 auto animate(Reactive<Int64>& time, Entity* entity) {
-	auto sprite_box = entity->model->sprite_box;
+	
 	return from(time, entity->model->sprite_position)
-		.use([sprite_box](Int64 t, glm::vec2 p) {
-			//std::cout << t << "\n";
-		const float x_step = 42.0f / 256.0f;
-		const float y_step = 52.0f / 256.0f;
-			if (t % 1 == 0) {
-				//std::cout << p[0] << ", " << p[1] << "\n";
-				//std::cout << "Animation step!\n";
-				p[0] += x_step;
-				if (p[0] > 5.0f * x_step) {
-					p[0] = 0.0f;
-					p[1] -= y_step;
-				}
-				if (p[1] < -y_step) {
-					p[1] = 1.0f - (y_step);
-				}
-					
-			}
-			return p; })
+		.use([entity] (Int64 t, glm::vec2 p) mutable {
+			return (t % 8 == 0) ? entity->model->sprite_sheet.step_animation() : p; })
 		.determine(entity->model->sprite_position);
+}
+
+auto sync_player_animation(Reactive<std::vector<SDL_Event>>& events, Entity* player) {
+	return from(events, player->body, player->model->sprite_sheet.current_animation)
+		.use([](std::vector<SDL_Event> events, PhysObj* body, unsigned int c) {
+
+			if (-0.01 < body->velocity[0] && body->velocity[0] < 0.01) return 0u;
+
+			for (auto e : events) {
+				if (e.key.keysym.sym == SDLK_d) return 1u;
+				else  if (e.key.keysym.sym == SDLK_a) return 2u;
+			}
+
+			return c; })
+		.determine(player->model->sprite_sheet.current_animation);
 }
 
 void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
@@ -134,10 +134,9 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	updates.push_back(camera_track_object(main_camera, game_world.player));
 	updates.push_back(controls(game_world.player, keyboard_events, grav_normal));
 
-	
-
 	updates.push_back(track_object_xy(game_world.background, game_world.player));
 	updates.push_back(respawn_player(game_world.player, gui));
 
 	updates.push_back(animate(time, game_world.player));
+	updates.push_back(sync_player_animation(keyboard_events, game_world.player));
 }

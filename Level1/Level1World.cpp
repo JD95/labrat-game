@@ -34,13 +34,9 @@ Level1World::Level1World(SceneState& state)
 	{
 		rising_platforms.push_back(state.spawn_body(ground_model(21.0f + i*4.1f, 4.0f), playable_layer, 21.0f + i*4.1f, 4.0f, 2.0f, 1.0f, 0.0f));
 	}
-	
-
 
 	// Units
 	player = state.spawn_body(player_model(), playable_layer, 1.0f, 1.0f, 0.5f, 0.5f, 2.0f);
-	player->model->sprite_box = glm::vec2(42.0f/256.0f, 52.0f/ 256.0f);
-	player->model->sprite_position.value[1] = 1.0f - (104.0f / 256.0f);
 }
 
 
