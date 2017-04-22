@@ -12,6 +12,7 @@
 
 #include "../../labrat/scene/Layers.h"
 #include "../../labrat/reactive/reactive.h"
+#include "../units/Player.h"
 
 struct Level1World
 {
@@ -22,7 +23,9 @@ struct Level1World
 	// Units
 	Entity* friend_bot1;
 	Entity* friend_bot2;
-	Entity* player;
+	Player player;
+
+	Entity* enemy;
 
 	// props
 	//std::vector<Entity*> trees;

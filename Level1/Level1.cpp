@@ -117,6 +117,50 @@ auto sync_player_animation(Reactive<std::vector<SDL_Event>>& events, Entity* pla
 		.determine(player->model->sprite_sheet.current_animation);
 }
 
+auto player_health(Player& p, Entity* enemy, GUI& gui) {
+	return from(p.health, p.entity->body)
+		.use([&gui, e = enemy->id](int hp, PhysObj* body) {
+			for (auto id : body->collided_with) {
+				if (id == e) {
+					gui.lose_hp();
+					gui.lose_hp();
+					gui.lose_hp();
+					return hp - 3;
+				}
+			}
+			return hp; })
+		.determine(p.health);
+}
+
+auto player_damage_knockback(Player& p, Entity* enemy) {
+	return from(p.entity->body, enemy->body)
+		.use([e = enemy->id](PhysObj* player, PhysObj* enemy) {
+			for (auto id : player->collided_with) {
+				if (id == e) {
+					auto force_direction = (player->position - enemy->position);
+					auto applied_force = 5.0f * glm::normalize(force_direction)[0];
+					player->velocity[0] += applied_force;
+				}
+			}
+
+			return player; })
+		.determine(p.entity->body);
+}
+
+auto enemy_persue_player(PhysObj* enemy, PhysObj* player) {
+
+	const float speed_c = 1.0f;
+	const float trigger_distance = 5.0f;
+	auto distance = glm::distance(enemy->position, player->position);
+
+	if (distance < trigger_distance) {
+		auto player_direction = glm::normalize(player->position - enemy->position);
+		enemy->velocity[0] = ((1.0f / distance) * speed_c) * player_direction[0];
+	}
+
+	return enemy;
+}
+
 void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	glm::vec2 grav_normal = get_grav_norm();
 
@@ -124,19 +168,28 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	for (auto platform : game_world.platforms)
 		updates.push_back(sync_physics_body(platform));
 
-	updates.push_back(sync_physics_body(game_world.player));
+	updates.push_back(sync_physics_body(game_world.player.entity));
+	updates.push_back(sync_physics_body(game_world.enemy));
 
 	for (auto platform : game_world.rising_platforms) {
 		updates.push_back(sync_physics_body(platform));
-		updates.push_back(rise_with_x_position(platform, game_world.player));
+		updates.push_back(rise_with_x_position(platform, game_world.player.entity));
 	}
 
-	updates.push_back(camera_track_object(main_camera, game_world.player));
-	updates.push_back(controls(game_world.player, keyboard_events, grav_normal));
+	updates.push_back(camera_track_object(main_camera, game_world.player.entity));
+	updates.push_back(controls(game_world.player.entity, keyboard_events, grav_normal));
 
-	updates.push_back(track_object_xy(game_world.background, game_world.player));
-	updates.push_back(respawn_player(game_world.player, gui));
+	updates.push_back(track_object_xy(game_world.background, game_world.player.entity));
+	updates.push_back(respawn_player(game_world.player.entity, gui));
 
-	updates.push_back(animate(time, game_world.player));
-	updates.push_back(sync_player_animation(keyboard_events, game_world.player));
+	updates.push_back(animate(time, game_world.player.entity));
+	updates.push_back(sync_player_animation(keyboard_events, game_world.player.entity));
+	updates.push_back(player_health(game_world.player, game_world.enemy, gui));
+	updates.push_back(player_damage_knockback(game_world.player, game_world.enemy));
+
+	// Enemy "AI"
+	updates.push_back(
+		from(game_world.enemy->body, game_world.player.entity->body)
+		.use(enemy_persue_player)
+		.determine(game_world.enemy->body));
 }

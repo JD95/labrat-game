@@ -36,7 +36,10 @@ Level1World::Level1World(SceneState& state)
 	}
 
 	// Units
-	player = state.spawn_body(player_model(), playable_layer, 1.0f, 1.0f, 0.5f, 0.5f, 2.0f);
+	player.entity = state.spawn_body(player_model(), playable_layer, 1.0f, 1.0f, 0.5f, 0.5f, 2.0f);
+	player.health = 24;
+
+	enemy = state.spawn_body(enemy_model(), playable_layer, 5.0f, 1.0f, 0.5f, 0.5f, 1.0f);
 }
 
 

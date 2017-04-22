@@ -54,6 +54,10 @@ inline auto ground_model(GLfloat width, GLfloat height) {
 	return repeating_texture_model("platformTile.png", width, height);
 }
 
+inline auto enemy_model() {
+	return basic_asset_model("enemy.png");
+}
+
 inline auto friend_model() {
 	return basic_asset_model("friend.png");
 }
