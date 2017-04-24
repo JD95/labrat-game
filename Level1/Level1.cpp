@@ -94,11 +94,11 @@ auto respawn_player(Entity* player, GUI& gui) {
 		.determine(player->body);
 }
 
-auto animate(Reactive<Int64>& time, Entity* entity) {
+auto animate(Reactive<Int64>& time, Entity* entity, int update_rate) {
 	
 	return from(time, entity->model->sprite_position)
-		.use([entity] (Int64 t, glm::vec2 p) mutable {
-			return (t % 8 == 0) ? entity->model->sprite_sheet.step_animation() : p; })
+		.use([entity, update_rate] (Int64 t, glm::vec2 p) mutable {
+			return (t % update_rate == 0) ? entity->model->sprite_sheet.step_animation() : p; })
 		.determine(entity->model->sprite_position);
 }
 
@@ -182,7 +182,8 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	updates.push_back(track_object_xy(game_world.background, game_world.player.entity));
 	updates.push_back(respawn_player(game_world.player.entity, gui));
 
-	updates.push_back(animate(time, game_world.player.entity));
+	updates.push_back(animate(time, game_world.player.entity, 8));
+	updates.push_back(animate(time, game_world.lava, 15));
 	updates.push_back(sync_player_animation(keyboard_events, game_world.player.entity));
 	updates.push_back(player_health(game_world.player, game_world.enemy, gui));
 	updates.push_back(player_damage_knockback(game_world.player, game_world.enemy));

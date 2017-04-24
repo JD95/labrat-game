@@ -7,9 +7,6 @@ Level1World::Level1World(SceneState& state)
 	//for (int i = 0; i < 3; i++)
 	background = state.spawn_massless(spacebackground_model(), background_layer, 0.0f,0.0f,20.0f,20.0f);
 
-	lava = state.spawn_massless(lava_model(), 0.1f, 15.0f, 1.0f, 20.0f, 2.0f);
-
-
 	// Platforms 
 	auto platform = [&state](float x, float y, float width, float height) {
 		return state.spawn_body(ground_model(width, height), playable_layer,x,y,width,height, 0.0f);
@@ -39,7 +36,9 @@ Level1World::Level1World(SceneState& state)
 	player.entity = state.spawn_body(player_model(), playable_layer, 1.0f, 1.0f, 0.5f, 0.5f, 2.0f);
 	player.health = 24;
 
-	enemy = state.spawn_body(enemy_model(), playable_layer, 5.0f, 1.0f, 0.5f, 0.5f, 1.0f);
+	enemy = state.spawn_body(enemy_model(), playable_layer, 5.0f, 1.0f, 0.5f, 0.5f, 4.0f);
+
+	lava = state.spawn_massless(lava_model(), 0.1f, 15.0f, -1.0f, 20.0f, 5.5f);
 }
 
 

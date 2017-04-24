@@ -88,5 +88,7 @@ inline auto hp_segment_model() {
 }
 
 inline auto lava_model() {
-	return basic_asset_model("lava.png");
+	return animated_model("LavaSprite.png", 1, 22, {
+		Animation {{0,0}, {0,21}}
+	});
 }
