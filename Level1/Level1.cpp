@@ -161,6 +161,23 @@ auto enemy_persue_player(PhysObj* enemy, PhysObj* player) {
 	return enemy;
 }
 
+auto click_event_handler(std::vector<SDL_Event> events, glm::vec3 position) {
+	for (auto event : events) {
+		if (event.type == SDL_MOUSEBUTTONDOWN) {
+			position.x = (float(event.button.x) - 540.0f) / 540.0f;
+			position.y = -(float(event.button.y) - 360.0f) / 360.0f;
+		}
+	}
+	return position; 
+}
+
+auto mouse_click_update(Reactive<std::vector<SDL_Event>>& events, Entity* elm) {
+	return from(events, elm->transform.position)
+		.use(click_event_handler)
+		.determine(elm->transform.position);
+}
+
+
 void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	glm::vec2 grav_normal = get_grav_norm();
 
@@ -188,9 +205,15 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	updates.push_back(player_health(game_world.player, game_world.enemy, gui));
 	updates.push_back(player_damage_knockback(game_world.player, game_world.enemy));
 
+	updates.push_back(mouse_click_update(keyboard_events, gui.flower));
+
 	// Enemy "AI"
 	updates.push_back(
 		from(game_world.enemy->body, game_world.player.entity->body)
 		.use(enemy_persue_player)
 		.determine(game_world.enemy->body));
+
+	/*for (auto gui_elem : gui.dragable) {
+		updates.push_back(update_with_mouse_drag(keyboard_events, gui_elem));
+	}*/
 }

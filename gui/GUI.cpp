@@ -13,6 +13,8 @@ GUI::GUI(SceneState & state)
 		hp_bar.push_back(state.gui_spawn(hp_segment_model(), hp_x_position + (i * 0.025f), hp_y_position, 0.01f, 0.03f));
 	}
 
+	flower = state.gui_spawn(goal_sign_model(), 10.0f, 10.0f, 0.2f, 0.2f);
+
 }
 
 GUI::~GUI()
@@ -22,6 +24,7 @@ GUI::~GUI()
 void GUI::lose_hp()
 {
 	current_hp--;
-	if (current_hp >= 0)
-		level.gui_entities.destroy_object(hp_bar[current_hp]->id);
+	if (current_hp >= 0) {
+		//level.gui_entities.destroy_object(hp_bar[current_hp]->id);
+	}
 }
