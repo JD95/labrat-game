@@ -1,6 +1,7 @@
 #include "Level1.h"
 
 #include <vector>
+#include <array>
 
 #include "../../labrat/primitive_shapes/polygon.h"
 #include "../../labrat/entity/transform.h"
@@ -11,10 +12,13 @@
 #include "../../labrat/opengl/vertexdata.h"
 #include "../../labrat/physics/PhysObj.h"
 #include "../../labrat/texture/SpriteSheet.h"
+#include "../../labrat//sound/Sound.h"
+
 
 Level1::Level1()
 	: game_world(*this)
 	, gui(*this) 
+	, game_sounds(*this)
 {
 	main_camera = Camera(glm::vec3(0.0f, -1.0f, 5.0f)		// Position
 		, glm::vec3(0.0, 0.5f, -20.0f)	// Focus
@@ -120,8 +124,8 @@ auto sync_player_animation(Reactive<std::vector<SDL_Event>>& events, Entity* pla
 auto player_health(Player& p, Entity* enemy, GUI& gui) {
 	return from(p.health, p.entity->body)
 		.use([&gui, e = enemy->id](int hp, PhysObj* body) {
-			for (auto id : body->collided_with) {
-				if (id == e) {
+			for (auto info : body->collisions.enter) {
+				if (info.id == e) {
 					gui.lose_hp();
 					gui.lose_hp();
 					gui.lose_hp();
@@ -135,8 +139,8 @@ auto player_health(Player& p, Entity* enemy, GUI& gui) {
 auto player_damage_knockback(Player& p, Entity* enemy) {
 	return from(p.entity->body, enemy->body)
 		.use([e = enemy->id](PhysObj* player, PhysObj* enemy) {
-			for (auto id : player->collided_with) {
-				if (id == e) {
+			for (auto info : player->collisions.enter) {
+				if (info.id == e) {
 					auto force_direction = (player->position - enemy->position);
 					auto applied_force = 5.0f * glm::normalize(force_direction)[0];
 					player->velocity[0] += applied_force;
@@ -178,6 +182,29 @@ auto mouse_click_update(Reactive<std::vector<SDL_Event>>& events, Entity* elm) {
 }
 
 
+auto end_game(Entity* player, Reactive<int>& current_level) {
+	return from(player->body, current_level)
+		.use([](PhysObj* body, int level) {
+		if (body->position[0] > 2)
+			return -1;
+		else
+			return level;
+	}).determine(current_level);
+}
+
+auto pearson_landing_sound(Entity* player, Reactive<varied_sound<7>>& sounds) {
+	return from(player->body, sounds)
+		.use([](PhysObj* body, varied_sound<7> steps) {
+			for (auto c : body->collisions.enter) {
+				if (c.velocity[1] < -0.5f) {
+					steps[0/*rand() % 7*/]->play();
+					break;
+				}
+			}
+			return body;
+		}).determine(player->body);
+}
+
 void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	glm::vec2 grav_normal = get_grav_norm();
 
@@ -199,7 +226,7 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	updates.push_back(track_object_xy(game_world.background, game_world.player.entity));
 	updates.push_back(respawn_player(game_world.player.entity, gui));
 
-	updates.push_back(animate(time, game_world.player.entity, 8));
+	//updates.push_back(animate(time, game_world.player.entity, 8));
 	updates.push_back(animate(time, game_world.lava, 15));
 	updates.push_back(sync_player_animation(keyboard_events, game_world.player.entity));
 	updates.push_back(player_health(game_world.player, game_world.enemy, gui));
@@ -216,4 +243,7 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	/*for (auto gui_elem : gui.dragable) {
 		updates.push_back(update_with_mouse_drag(keyboard_events, gui_elem));
 	}*/
+
+	//updates.push_back(end_game(game_world.player.entity, current_level));
+	updates.push_back(pearson_landing_sound(game_world.player.entity, game_sounds.pearson_landing_sounds));
 }

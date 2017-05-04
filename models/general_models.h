@@ -43,11 +43,12 @@ inline auto basic_asset_model(std::string filepath) {
 }
 
 inline auto player_model() {
-	return animated_model("bi_directional_stick.png", 3, 8, {
-		Animation{ { 0,0 },{ 0,0 } },
-		Animation { { 1,0 }, { 1,7 } },
-		Animation { { 2,0 }, { 2,7 } }
-	});
+	//return animated_model("bi_directional_stick.png", 3, 8, {
+	//	Animation{ { 0,0 },{ 0,0 } },
+	//	Animation { { 1,0 }, { 1,7 } },
+	//	Animation { { 2,0 }, { 2,7 } }
+	//});
+	return basic_asset_model("betterSpaceMan.png");
 }
 
 inline auto ground_model(GLfloat width, GLfloat height) {

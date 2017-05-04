@@ -15,10 +15,12 @@
 #include "../models/general_models.h"
 #include "../Level1/Level1World.h"
 #include "../gui/GUI.h"
+#include "../Level1/Level1Sounds.h"
 
 struct Level1 : public SceneState
 {
 	Level1World game_world;
+	Level1Sounds game_sounds;
 	GUI gui;
 
 	// stateful updates

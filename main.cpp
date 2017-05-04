@@ -9,6 +9,7 @@
 #include <SDL_mixer.h>
 #include <thread>
 #include <chrono>
+#include <stdlib.h>
 
 
 #include "../labrat/window/game.h"
@@ -20,6 +21,7 @@
 #include "../labrat/reactive/source.h"
 
 #include "Level1/Level1.h"
+#include "../labrat/physics/Collisions.h"
 
 using std::vector;
 using std::function;
@@ -103,9 +105,44 @@ void test_reactive_values() {
 	}
 }
 
+void testing_collisions() {
+	Collisions collisions;
+	glm::vec2 v(1.0f, 1.0f);
+
+	for (int i = 0; i < 10; i++)
+	{
+		collisions.add_collision({ 0,i }, v);
+	}
+
+	// All in enter
+	std::cout << collisions;
+	system("pause");
+
+	// All in green
+	collisions.cycle_phase();
+	std::cout << collisions;
+	system("pause");
+
+	for (int i = 0; i < 5; i++)
+	{
+		collisions.add_collision({ 0,i }, v);
+	}
+
+	// Half in green, half in blue
+	collisions.cycle_phase();
+	std::cout << collisions;
+	system("pause");
+
+	collisions.cycle_phase();
+	std::cout << collisions;
+	system("pause");
+
+}
+
 int main(int argc, char *argv[])
 {
-	//play_audio();
+	srand((unsigned int)time(NULL));
+	//testing_collisions();
 	Game<Level1> super_alpha(std::string("labrat Engine - Super Alpha"), 1080,720);
 	super_alpha.game();
 
