@@ -196,8 +196,8 @@ auto pearson_landing_sound(Entity* player, Reactive<varied_sound<7>>& sounds) {
 	return from(player->body, sounds)
 		.use([](PhysObj* body, varied_sound<7> steps) {
 			for (auto c : body->collisions.enter) {
-				if (c.velocity[1] < -0.5f) {
-					steps[0/*rand() % 7*/]->play();
+				if (c.velocity[1] > 0.5f) {
+					steps[rand() % 7]->play();
 					break;
 				}
 			}
