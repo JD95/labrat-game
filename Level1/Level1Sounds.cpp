@@ -20,7 +20,15 @@ Level1Sounds::Level1Sounds(SceneState& scene)
 	for (size_t i = 0; i < pearson_landing_sounds.value.size(); i++){
 		pearson_landing_sounds.value[i] = scene.load_sound(path + steps[i]);
 	}
-		
+	
+	std::string bounces[7] = {
+		"bounce_low.wav",
+		"bounce_mid.wav",
+		"bounce_high.wav"
+	};
+	for (size_t i = 0; i < monster_bounces.value.size(); i++) {
+		monster_bounces.value[i] = scene.load_sound(path + "monster/"+ bounces[i]);
+	}
 }
 
 

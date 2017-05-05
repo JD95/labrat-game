@@ -36,7 +36,7 @@ Level1World::Level1World(SceneState& state)
 	player.entity = state.spawn_body(player_model(), playable_layer, 1.0f, 1.0f, 0.5f, 0.5f, 2.0f);
 	player.health = 24;
 
-	enemy = state.spawn_body(enemy_model(), playable_layer, 5.0f, 1.0f, 0.5f, 0.5f, 4.0f);
+	enemy = state.spawn_body(enemy_model(), playable_layer, 5.0f, 1.0f, 0.5f, 0.5f, 2.0f);
 
 	lava = state.spawn_massless(lava_model(), 0.1f, 15.0f, -1.0f, 20.0f, 5.5f);
 }

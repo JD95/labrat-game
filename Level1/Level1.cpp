@@ -124,7 +124,7 @@ auto sync_player_animation(Reactive<std::vector<SDL_Event>>& events, Entity* pla
 auto player_health(Player& p, Entity* enemy, GUI& gui) {
 	return from(p.health, p.entity->body)
 		.use([&gui, e = enemy->id](int hp, PhysObj* body) {
-			for (auto info : body->collisions.enter) {
+			for (auto& info : body->collisions.contact()) {
 				if (info.id == e) {
 					gui.lose_hp();
 					gui.lose_hp();
@@ -138,9 +138,9 @@ auto player_health(Player& p, Entity* enemy, GUI& gui) {
 
 auto player_damage_knockback(Player& p, Entity* enemy) {
 	return from(p.entity->body, enemy->body)
-		.use([e = enemy->id](PhysObj* player, PhysObj* enemy) {
-			for (auto info : player->collisions.enter) {
-				if (info.id == e) {
+		.use([](PhysObj* player, PhysObj* enemy) {
+			for (auto& info : player->collisions.enter) {
+				if (info.id == enemy->entity_ID) {
 					auto force_direction = (player->position - enemy->position);
 					auto applied_force = 5.0f * glm::normalize(force_direction)[0];
 					player->velocity[0] += applied_force;
@@ -149,6 +149,21 @@ auto player_damage_knockback(Player& p, Entity* enemy) {
 
 			return player; })
 		.determine(p.entity->body);
+}
+
+auto bounce(Entity* entity, Entity* source) {
+	return from(entity->body, source->body)
+		.use([](PhysObj* body, PhysObj* s) {
+		if (glm::distance(body->position, s->position) < 5.0f) {
+			for (auto& c : body->collisions.enter) {
+				if (c.velocity[1] > 0.5f) {
+					body->velocity[1] += 4;
+					break;
+				}
+			}
+		}
+		return body;
+	}).determine(entity->body);
 }
 
 auto enemy_persue_player(PhysObj* enemy, PhysObj* player) {
@@ -192,12 +207,13 @@ auto end_game(Entity* player, Reactive<int>& current_level) {
 	}).determine(current_level);
 }
 
-auto pearson_landing_sound(Entity* player, Reactive<varied_sound<7>>& sounds) {
+template <int n>
+auto landing_sound(Entity* player, Reactive<varied_sound<n>>& sounds) {
 	return from(player->body, sounds)
-		.use([](PhysObj* body, varied_sound<7> steps) {
+		.use([](PhysObj* body, varied_sound<n> steps) {
 			for (auto c : body->collisions.enter) {
 				if (c.velocity[1] > 0.5f) {
-					steps[rand() % 7]->play();
+					steps[rand() % n]->play();
 					break;
 				}
 			}
@@ -231,7 +247,6 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	updates.push_back(sync_player_animation(keyboard_events, game_world.player.entity));
 	updates.push_back(player_health(game_world.player, game_world.enemy, gui));
 	updates.push_back(player_damage_knockback(game_world.player, game_world.enemy));
-
 	updates.push_back(mouse_click_update(keyboard_events, gui.flower));
 
 	// Enemy "AI"
@@ -239,11 +254,12 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 		from(game_world.enemy->body, game_world.player.entity->body)
 		.use(enemy_persue_player)
 		.determine(game_world.enemy->body));
-
+	updates.push_back(bounce(game_world.enemy, game_world.player.entity));
 	/*for (auto gui_elem : gui.dragable) {
 		updates.push_back(update_with_mouse_drag(keyboard_events, gui_elem));
 	}*/
 
 	//updates.push_back(end_game(game_world.player.entity, current_level));
-	updates.push_back(pearson_landing_sound(game_world.player.entity, game_sounds.pearson_landing_sounds));
+	updates.push_back(landing_sound<7>(game_world.player.entity, game_sounds.pearson_landing_sounds));
+	updates.push_back(landing_sound<3>(game_world.enemy, game_sounds.monster_bounces));
 }

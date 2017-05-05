@@ -116,26 +116,27 @@ void testing_collisions() {
 
 	// All in enter
 	std::cout << collisions;
-	system("pause");
+	
 
 	// All in green
 	collisions.cycle_phase();
 	std::cout << collisions;
-	system("pause");
+
 
 	for (int i = 0; i < 5; i++)
 	{
+		collisions.add_collision({ 0,i }, v);
 		collisions.add_collision({ 0,i }, v);
 	}
 
 	// Half in green, half in blue
 	collisions.cycle_phase();
 	std::cout << collisions;
-	system("pause");
+
 
 	collisions.cycle_phase();
 	std::cout << collisions;
-	system("pause");
+
 
 }
 
@@ -146,5 +147,6 @@ int main(int argc, char *argv[])
 	Game<Level1> super_alpha(std::string("labrat Engine - Super Alpha"), 1080,720);
 	super_alpha.game();
 
+	system("pause");
 	return 0;
 }

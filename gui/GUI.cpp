@@ -25,6 +25,6 @@ void GUI::lose_hp()
 {
 	current_hp--;
 	if (current_hp >= 0) {
-		//level.gui_entities.destroy_object(hp_bar[current_hp]->id);
+		level.gui_entities.destroy_object(hp_bar[current_hp]->id);
 	}
 }
