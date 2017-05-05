@@ -8,8 +8,12 @@
 struct Level1Sounds
 {
 	Reactive<Sound*> music;
-	Reactive<std::array<Sound*, 7>> pearson_landing_sounds;
-	Reactive<std::array<Sound*, 3>> monster_bounces;
+	Reactive<SoundClips<7>> pearson_landing_sounds;
+	Reactive<SoundClips<3>> monster_bounces;
+	Reactive<SoundClips<2>> intro_clips;
+	Reactive<SoundClips<11>> malaphors;
+	Reactive<SoundClips<33>> witty;
+
 	Level1Sounds(SceneState& scene);
 	~Level1Sounds();
 };

@@ -16,6 +16,7 @@
 #include "../Level1/Level1World.h"
 #include "../gui/GUI.h"
 #include "../Level1/Level1Sounds.h"
+#include "../scripts/VoiceClips.h"
 
 struct Level1 : public SceneState
 {
@@ -25,6 +26,7 @@ struct Level1 : public SceneState
 
 	// stateful updates
 	move_player controls;
+	VoiceClips voice;
 
 	Level1();
 	~Level1();

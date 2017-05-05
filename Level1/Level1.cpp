@@ -19,6 +19,7 @@ Level1::Level1()
 	: game_world(*this)
 	, gui(*this) 
 	, game_sounds(*this)
+	, voice(game_sounds.intro_clips, game_sounds.malaphors, game_sounds.witty)
 {
 	main_camera = Camera(glm::vec3(0.0f, -1.0f, 5.0f)		// Position
 		, glm::vec3(0.0, 0.5f, -20.0f)	// Focus
@@ -208,9 +209,9 @@ auto end_game(Entity* player, Reactive<int>& current_level) {
 }
 
 template <int n>
-auto landing_sound(Entity* player, Reactive<varied_sound<n>>& sounds) {
+auto landing_sound(Entity* player, Reactive<SoundClips<n>>& sounds) {
 	return from(player->body, sounds)
-		.use([](PhysObj* body, varied_sound<n> steps) {
+		.use([](PhysObj* body, SoundClips<n> steps) {
 			for (auto c : body->collisions.enter) {
 				if (c.velocity[1] > 0.5f) {
 					steps[rand() % n]->play();
@@ -262,4 +263,7 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	//updates.push_back(end_game(game_world.player.entity, current_level));
 	updates.push_back(landing_sound<7>(game_world.player.entity, game_sounds.pearson_landing_sounds));
 	updates.push_back(landing_sound<3>(game_world.enemy, game_sounds.monster_bounces));
+
+	// Voice Clips
+	updates.push_back(voice(delta_time));
 }

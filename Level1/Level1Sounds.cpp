@@ -29,6 +29,21 @@ Level1Sounds::Level1Sounds(SceneState& scene)
 	for (size_t i = 0; i < monster_bounces.value.size(); i++) {
 		monster_bounces.value[i] = scene.load_sound(path + "monster/"+ bounces[i]);
 	}
+
+	for (size_t i = 0; i < intro_clips.value.size(); i++)
+	{
+		intro_clips.value[i] = scene.load_sound(path + "ai/intro/intro-" + std::to_string(i+1) + ".wav");
+	}
+
+	for (size_t i = 0; i < malaphors.value.size(); i++)
+	{
+		malaphors.value[i] = scene.load_sound(path + "ai/malaphor/malaphor-" + std::to_string(i+1) + ".wav");
+	}
+
+	for (size_t i = 0; i < witty.value.size(); i++)
+	{
+		witty.value[i] = scene.load_sound(path + "ai/witty/witty-" + std::to_string(i+1) + ".wav");
+	}
 }
 
 
