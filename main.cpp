@@ -67,6 +67,11 @@ void test_slotmap() {
 
 	std::cout << (entities.get_object(b) == nullptr ? "Entity version destroyed successfully!\n" : "Entity version was not incremented!\n");
 
+	std::cout << "Destroying Object at the end!\n";
+	entities.destroy_object(e);
+
+	print_id_list(entities);
+
 	system("pause");
 }
 
@@ -144,6 +149,7 @@ int main(int argc, char *argv[])
 {
 	srand((unsigned int)time(NULL));
 	//testing_collisions();
+	//test_slotmap();
 	Game<Level1> super_alpha(std::string("labrat Engine - Super Alpha"), 1080,720);
 	super_alpha.game();
 
