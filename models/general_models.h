@@ -43,12 +43,9 @@ inline auto basic_asset_model(std::string filepath) {
 }
 
 inline auto player_model() {
-	//return animated_model("bi_directional_stick.png", 3, 8, {
-	//	Animation{ { 0,0 },{ 0,0 } },
-	//	Animation { { 1,0 }, { 1,7 } },
-	//	Animation { { 2,0 }, { 2,7 } }
-	//});
-	return basic_asset_model("betterSpaceMan.png");
+	return animated_model("SpaceManRunSprite.png", 1, 7, {
+		Animation { { 0,0 }, { 0,6 } },
+	});
 }
 
 inline auto ground_model(GLfloat width, GLfloat height) {
@@ -56,7 +53,9 @@ inline auto ground_model(GLfloat width, GLfloat height) {
 }
 
 inline auto enemy_model() {
-	return basic_asset_model("enemy.png");
+	return animated_model("EnemySprite.png", 1, 10, {
+		Animation{ { 0,0 },{ 0,9 } },
+	});
 }
 
 inline auto friend_model() {

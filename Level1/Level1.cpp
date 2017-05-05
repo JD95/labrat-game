@@ -113,10 +113,10 @@ auto sync_player_animation(Reactive<std::vector<SDL_Event>>& events, Entity* pla
 
 			if (-0.01 < body->velocity[0] && body->velocity[0] < 0.01) return 0u;
 
-			for (auto e : events) {
+			/*for (auto e : events) {
 				if (e.key.keysym.sym == SDLK_d) return 1u;
 				else  if (e.key.keysym.sym == SDLK_a) return 2u;
-			}
+			}*/
 
 			return c; })
 		.determine(player->model->sprite_sheet.current_animation);
@@ -243,7 +243,7 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	updates.push_back(track_object_xy(game_world.background, game_world.player.entity));
 	updates.push_back(respawn_player(game_world.player.entity, gui));
 
-	//updates.push_back(animate(time, game_world.player.entity, 8));
+	updates.push_back(animate(time, game_world.player.entity, 8));
 	updates.push_back(animate(time, game_world.lava, 15));
 	updates.push_back(sync_player_animation(keyboard_events, game_world.player.entity));
 	updates.push_back(player_health(game_world.player, game_world.enemy, gui));
@@ -256,6 +256,7 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 		.use(enemy_persue_player)
 		.determine(game_world.enemy->body));
 	updates.push_back(bounce(game_world.enemy, game_world.player.entity));
+	updates.push_back(animate(time, game_world.enemy, 8));
 	/*for (auto gui_elem : gui.dragable) {
 		updates.push_back(update_with_mouse_drag(keyboard_events, gui_elem));
 	}*/

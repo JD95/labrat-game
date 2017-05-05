@@ -59,11 +59,10 @@ struct VoiceClips {
 	auto operator()(Reactive<std::chrono::nanoseconds>& delta_time){
 		return from(delta_time)
 			.use([this](std::chrono::nanoseconds dt) {
-				std::cout << clip_timer << "\n";
+				
 				clip_timer += dt.count() * 0.000001;
-				//std::cout << clip_timer << "\n";
 				// Clip over
-				if (clip_timer > current_clip_length + intro_done ? wait_period : 0) {
+				if (clip_timer > current_clip_length + (intro_done ? wait_period : 0)) {
 					current_track++;
 					clip_timer = 0;
 
