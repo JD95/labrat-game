@@ -20,6 +20,14 @@ struct Level1World
 	std::vector<Entity*> rising_platforms;
 	std::vector<Entity*> platforms;
 
+	Entity* puzzle1;
+	Entity* puzzle2;
+	Entity* puzzle3;
+	Entity* puzzle4;
+	Entity* puzzle5;
+	Entity* puzzle6;
+
+
 	// Units
 	Entity* friend_bot1;
 	Entity* friend_bot2;

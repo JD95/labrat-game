@@ -32,6 +32,13 @@ Level1World::Level1World(SceneState& state)
 		rising_platforms.push_back(state.spawn_body(ground_model(21.0f + i*4.1f, 4.0f), playable_layer, 21.0f + i*4.1f, 4.0f, 2.0f, 1.0f, 0.0f));
 	}
 
+	puzzle1 = platform(43.0f, 4.00f, 1.75f, 0.25f);
+	puzzle2 = platform(45.0f, 5.0f, 0.5f, 1.0f);
+	puzzle3 = platform(45.6f, 4.00f, 2.0f, 0.25f);
+	puzzle4 = platform(45.6f, 5.00f, 2.0f, 0.25f);
+	puzzle5 = platform(45.6f, 6.00f, 2.0f, 0.25f);
+	puzzle6 = platform(47.8f, 6.0f, 0.5f, 1.0f);
+
 	// Units
 	player.entity = state.spawn_body(player_model(), playable_layer, 1.0f, 1.0f, 0.5f, 0.5f, 2.0f);
 	player.health = 24;

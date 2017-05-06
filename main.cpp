@@ -152,6 +152,6 @@ int main(int argc, char *argv[])
 	//test_slotmap();
 	Game<Level1> super_alpha(std::string("labrat Engine - Super Alpha"), 1080,720);
 	super_alpha.game();
-
+	system("pause");
 	return 0;
 }

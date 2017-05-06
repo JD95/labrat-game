@@ -204,6 +204,18 @@ auto click_event_handler(std::vector<SDL_Event> events, glm::vec3 position) {
 	return position; 
 }
 
+auto raise_if_past(Entity* block, Player& player) {
+	return from(block->body, player.entity->body)
+		.use([](PhysObj* b, PhysObj* p) {
+			if (p->position[0] > 45.0f) {
+				if (b->position[1] < 5.0f) {
+					b->position[1] += 0.1f;
+				}
+			}
+			return b;
+	}).determine(block->body);
+}
+
 auto mouse_click_update(Reactive<std::vector<SDL_Event>>& events, Entity* elm) {
 	return from(events, elm->transform.position)
 		.use(click_event_handler)
@@ -211,13 +223,17 @@ auto mouse_click_update(Reactive<std::vector<SDL_Event>>& events, Entity* elm) {
 }
 
 
-auto end_game(Entity* player, Reactive<int>& current_level) {
-	return from(player->body, current_level)
-		.use([](PhysObj* body, int level) {
-		if (body->position[0] > 2)
+auto end_game(Player& player, Reactive<int>& current_level, object_id win_block) {
+	return from(player.entity->body, player.health, current_level)
+		.use([win_block](PhysObj* body, int hp, int level) {
+		if (hp <= 0)
 			return -1;
-		else
-			return level;
+		else {
+			for (auto c : body->collisions.enter) {
+				if (c.id == win_block) return 2;
+				else return level;
+			}
+		}
 	}).determine(current_level);
 }
 
@@ -235,6 +251,37 @@ auto landing_sound(Entity* player, Reactive<SoundClips<n>>& sounds) {
 		}).determine(player->body);
 }
 
+
+
+auto raise_two_blocks(Entity* a, Player& p) {
+	float starting_y = a->body.value->position[1];
+	return from(a->body, p.entity->body)
+		.use([y = starting_y](PhysObj* block, PhysObj* player) {
+		if (player->position[0] >= block->position[0]) {
+			return block;
+		}
+		else {
+			auto d = 1.0f/glm::distance(block->position[0], player->position[0]);
+			auto cap = player->position[1] > 6.0f ? y + 1 : y;
+			block->position[1] = cap - ((0.5f*d) > 2.0f ? 1.0f : (0.5f*d));
+			return block;
+		}
+
+	}).determine(a->body);
+}
+
+auto move_right(Entity* a, Player& p) {
+	return from(a->body, p.entity->body)
+		.use([](PhysObj* b, PhysObj* p) {
+			if (p->position[1] > 6.0f) {
+				if (b->position[0] < 49.0f) {
+					b->position[0] += 0.1f;
+				}
+			}
+			return b;
+	}).determine(a->body);
+}
+
 void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	glm::vec2 grav_normal = get_grav_norm();
 
@@ -249,6 +296,13 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 		updates.push_back(sync_physics_body(platform));
 		updates.push_back(rise_with_x_position(platform, game_world.player.entity));
 	}
+
+	updates.push_back(sync_physics_body(game_world.puzzle1));
+	updates.push_back(sync_physics_body(game_world.puzzle2));
+	updates.push_back(sync_physics_body(game_world.puzzle3));
+	updates.push_back(sync_physics_body(game_world.puzzle4));
+	updates.push_back(sync_physics_body(game_world.puzzle5));
+	updates.push_back(sync_physics_body(game_world.puzzle6));
 
 	updates.push_back(camera_track_object(main_camera, game_world.player.entity));
 	updates.push_back(controls(game_world.player.entity, keyboard_events, grav_normal));
@@ -291,12 +345,16 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	updates.push_back(bounce(game_world.enemy, game_world.player.entity));
 	updates.push_back(animate(time, game_world.enemy, 5));
 
-	//updates.push_back(end_game(game_world.player.entity, current_level));
+	updates.push_back(end_game(game_world.player, current_level, game_world.puzzle3->id));
 	updates.push_back(landing_sound<7>(game_world.player.entity, game_sounds.pearson_landing_sounds));
 	updates.push_back(landing_sound<3>(game_world.enemy, game_sounds.monster_bounces));
 
 	// Voice Clips
 	updates.push_back(voice(delta_time, gui.slide_script.music_percent, gui.slide_script.sfx_percent));
 
-
+	// Final Puzzle
+	updates.push_back(raise_two_blocks(game_world.puzzle2, game_world.player));
+	updates.push_back(raise_two_blocks(game_world.puzzle6, game_world.player));
+	updates.push_back(raise_if_past(game_world.puzzle1, game_world.player));
+	updates.push_back(move_right(game_world.puzzle3, game_world.player));
 }
