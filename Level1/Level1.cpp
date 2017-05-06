@@ -248,7 +248,27 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	updates.push_back(sync_player_animation(keyboard_events, game_world.player.entity));
 	updates.push_back(player_health(game_world.player, game_world.enemy, gui));
 	updates.push_back(player_damage_knockback(game_world.player, game_world.enemy));
-	updates.push_back(mouse_click_update(keyboard_events, gui.flower));
+	
+	// GUI Interactions
+	updates.push_back(
+		from(keyboard_events, gui.settings_active, gui.settings_window->transform.position)
+		.use(gui.make_toggle_settings([](auto a, auto b, auto c) { return c; }))
+		.determine(gui.settings_window->transform.position));
+
+	updates.push_back(
+		from(keyboard_events, gui.settings_active, gui.music_slider->transform.position)
+		.use(gui.make_toggle_settings(slide_handle))
+		.determine(gui.music_slider->transform.position));
+
+	updates.push_back(
+		from(keyboard_events, gui.settings_active, gui.sfx_slider->transform.position)
+		.use(gui.make_toggle_settings(slide_handle))
+		.determine(gui.sfx_slider->transform.position));
+
+	updates.push_back(
+		from(keyboard_events, gui.settings_active)
+		.use(switch_toggle)
+		.determine(gui.settings_active));
 
 	// Enemy "AI"
 	updates.push_back(
@@ -257,9 +277,6 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 		.determine(game_world.enemy->body));
 	updates.push_back(bounce(game_world.enemy, game_world.player.entity));
 	updates.push_back(animate(time, game_world.enemy, 8));
-	/*for (auto gui_elem : gui.dragable) {
-		updates.push_back(update_with_mouse_drag(keyboard_events, gui_elem));
-	}*/
 
 	//updates.push_back(end_game(game_world.player.entity, current_level));
 	updates.push_back(landing_sound<7>(game_world.player.entity, game_sounds.pearson_landing_sounds));
@@ -267,4 +284,6 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 
 	// Voice Clips
 	updates.push_back(voice(delta_time));
+
+
 }

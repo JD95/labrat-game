@@ -42,19 +42,25 @@ inline auto basic_asset_model(std::string filepath) {
 	return basic_model(asset_path(filepath));
 }
 
+inline auto ground_model(GLfloat width, GLfloat height) {
+	return repeating_texture_model("platformTile.png", width, height);
+}
+
 inline auto player_model() {
 	return animated_model("SpaceManRunSprite.png", 1, 7, {
 		Animation { { 0,0 }, { 0,6 } },
 	});
 }
 
-inline auto ground_model(GLfloat width, GLfloat height) {
-	return repeating_texture_model("platformTile.png", width, height);
-}
-
 inline auto enemy_model() {
 	return animated_model("EnemySprite.png", 1, 10, {
 		Animation{ { 0,0 },{ 0,9 } },
+	});
+}
+
+inline auto lava_model() {
+	return animated_model("LavaSprite.png", 1, 22, {
+		Animation{ { 0,0 },{ 0,21 } }
 	});
 }
 
@@ -82,13 +88,18 @@ inline auto levelcomplete_model() {
 	return basic_asset_model("levelcomplete.png");
 }
 
-
 inline auto hp_segment_model() {
 	return basic_asset_model("hpsegment1.png");
 }
 
-inline auto lava_model() {
-	return animated_model("LavaSprite.png", 1, 22, {
-		Animation {{0,0}, {0,21}}
-	});
+inline auto settings_shortcut_model() {
+	return basic_asset_model("settingsshortcut.png");
+}
+
+inline auto slider_model() {
+	return basic_asset_model("settingsslider.png");
+}
+
+inline auto settings_model() {
+	return basic_asset_model("settingsbackground.png");
 }
