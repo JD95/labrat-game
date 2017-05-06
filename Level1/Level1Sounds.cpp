@@ -5,7 +5,7 @@
 Level1Sounds::Level1Sounds(SceneState& scene)
 {
 	music.value = scene.load_sound("labrat-game/assets/music/Game.wav");
-	music.value->play(-1);
+	music.value->play(-1, 0);
 
 	std::string path = "labrat-game/assets/sound_effects/";
 	std::string steps[7] = {

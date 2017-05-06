@@ -17,8 +17,8 @@
 
 Level1::Level1()
 	: game_world(*this)
-	, gui(*this) 
 	, game_sounds(*this)
+	, gui(*this, game_sounds.music.value, &voice, &game_sounds.pearson_landing_sounds.value, &game_sounds.monster_bounces.value)
 	, voice(game_sounds.intro_clips, game_sounds.malaphors, game_sounds.witty)
 {
 	main_camera = Camera(glm::vec3(0.0f, -1.0f, 5.0f)		// Position
@@ -214,7 +214,7 @@ auto landing_sound(Entity* player, Reactive<SoundClips<n>>& sounds) {
 		.use([](PhysObj* body, SoundClips<n> steps) {
 			for (auto c : body->collisions.enter) {
 				if (c.velocity[1] > 0.5f) {
-					steps[rand() % n]->play();
+					steps[rand() % n]->play(0,1);
 					break;
 				}
 			}
@@ -257,12 +257,12 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 
 	updates.push_back(
 		from(keyboard_events, gui.settings_active, gui.music_slider->transform.position)
-		.use(gui.make_toggle_settings(slide_handle))
+		.use(gui.make_toggle_settings(gui.slide_script))
 		.determine(gui.music_slider->transform.position));
 
 	updates.push_back(
 		from(keyboard_events, gui.settings_active, gui.sfx_slider->transform.position)
-		.use(gui.make_toggle_settings(slide_handle))
+		.use(gui.make_toggle_settings(gui.slide_script))
 		.determine(gui.sfx_slider->transform.position));
 
 	updates.push_back(
@@ -283,7 +283,7 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 	updates.push_back(landing_sound<3>(game_world.enemy, game_sounds.monster_bounces));
 
 	// Voice Clips
-	updates.push_back(voice(delta_time));
+	updates.push_back(voice(delta_time, gui.slide_script.music_percent, gui.slide_script.sfx_percent));
 
 
 }

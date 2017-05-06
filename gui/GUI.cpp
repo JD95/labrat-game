@@ -1,8 +1,10 @@
 #include "GUI.h"
 
+#include "../scripts/VoiceClips.h"
 
-GUI::GUI(SceneState & state)
+GUI::GUI(SceneState & state, Sound* m, VoiceClips* a, SoundClips<7>* p, SoundClips<3>* b)
 	: level(state)
+	, slide_script(m, a, p, b)
 {	
 	// Mouse Interface
 	settings_active = false;
@@ -35,24 +37,7 @@ void GUI::lose_hp()
 	}
 }
 
-glm::vec3 slide_handle(std::vector<SDL_Event> events, bool toggled, glm::vec3 position) {
-	
-	if (toggled) {
-		
-		float y_offset = position[1] == 0.0f ? 0 : 100;
-		//std::cout << y_offset << "\n";
-		for (auto event : events) {
-			bool within_x = event.button.x > 360 && event.button.x < 770;
-			bool within_y = event.button.y > 345 + y_offset && event.button.y < 365 + y_offset;
-			if (event.type == SDL_MOUSEBUTTONDOWN && within_x && within_y) {
-				position[0] = (event.button.x * 0.00185185f) - 1.0f;
-				return position;
-			}
-		}
-	}
-	
-	return position;
-}
+
 
 bool switch_toggle(std::vector<SDL_Event> events, bool toogle)
 {

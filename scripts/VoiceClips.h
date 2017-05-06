@@ -45,7 +45,7 @@ struct VoiceClips {
 		playlist.push_back(intro_clips.value[0]);
 		playlist.push_back(intro_clips.value[1]);
 		current_clip_length = intro_clips.value[0]->length();
-		playlist[current_track]->play();
+		playlist[current_track]->play(0,1);
 	}
 
 	auto random_playlist() {
@@ -56,10 +56,10 @@ struct VoiceClips {
 		return rand;
 	}
 
-	auto operator()(Reactive<std::chrono::nanoseconds>& delta_time){
-		return from(delta_time)
-			.use([this](std::chrono::nanoseconds dt) {
-				
+	auto operator()(Reactive<std::chrono::nanoseconds>& delta_time, Reactive<float>& music_value, Reactive<float>& sfx_value){
+		return from(delta_time, music_value, sfx_value)
+			.use([this](std::chrono::nanoseconds dt, float m, float s) {
+				//std::cout << m << " " << s << "\n";
 				clip_timer += dt.count() * 0.000001;
 				// Clip over
 				if (clip_timer > current_clip_length + (intro_done ? wait_period : 0)) {
@@ -76,7 +76,7 @@ struct VoiceClips {
 						current_track = 0;
 					}
 
-					playlist[current_track]->play();
+					playlist[current_track]->play(0, 1);
 				}
 
 				return dt;
