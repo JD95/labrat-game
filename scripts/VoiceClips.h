@@ -45,7 +45,7 @@ struct VoiceClips {
 		playlist.push_back(intro_clips.value[0]);
 		playlist.push_back(intro_clips.value[1]);
 		current_clip_length = intro_clips.value[0]->length();
-		playlist[current_track]->play(0,1);
+		playlist[current_track]->play();
 	}
 
 	auto random_playlist() {
@@ -76,7 +76,7 @@ struct VoiceClips {
 						current_track = 0;
 					}
 
-					playlist[current_track]->play(0, 1);
+					playlist[current_track]->play();
 				}
 
 				return dt;

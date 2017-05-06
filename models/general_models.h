@@ -47,14 +47,20 @@ inline auto ground_model(GLfloat width, GLfloat height) {
 }
 
 inline auto player_model() {
-	return animated_model("SpaceManRunSprite.png", 1, 7, {
-		Animation { { 0,0 }, { 0,6 } },
+	return animated_model("SpaceManFullSprite.png", 7, 7, {
+		Animation { { 0,0 }, { 0,1 } },
+		Animation{ { 1,0 },{ 1,5 } },
+		Animation{ { 2,0 },{ 2,5 } },
+		Animation{ { 3,0 },{ 3,5 } },
+		Animation{ { 4,0 },{ 4,6 } },
+		Animation{ { 5,0 },{ 5,6 } },
+		Animation{ { 6,0 },{ 6,6 } },
 	});
 }
 
 inline auto enemy_model() {
-	return animated_model("EnemySprite.png", 1, 10, {
-		Animation{ { 0,0 },{ 0,9 } },
+	return animated_model("EnemySprite.png", 2, 11, {
+		Animation{ { 0,0 },{ 0,10 } },
 	});
 }
 

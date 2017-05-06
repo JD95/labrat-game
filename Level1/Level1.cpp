@@ -108,15 +108,28 @@ auto animate(Reactive<Int64>& time, Entity* entity, int update_rate) {
 }
 
 auto sync_player_animation(Reactive<std::vector<SDL_Event>>& events, Entity* player) {
+	bool facing_right = true;
 	return from(events, player->body, player->model->sprite_sheet.current_animation)
-		.use([](std::vector<SDL_Event> events, PhysObj* body, unsigned int c) {
+		.use([right = facing_right] (std::vector<SDL_Event> events, PhysObj* body, unsigned int c) mutable {
 
-			if (-0.01 < body->velocity[0] && body->velocity[0] < 0.01) return 0u;
+			for (auto e : events) {
 
-			/*for (auto e : events) {
-				if (e.key.keysym.sym == SDLK_d) return 1u;
-				else  if (e.key.keysym.sym == SDLK_a) return 2u;
-			}*/
+				if (e.key.keysym.sym == SDLK_d) {
+					right = true;
+					return 3u;
+				}
+				else if (e.key.keysym.sym == SDLK_a) {
+					right = false;
+					return 4u;
+				}
+				else if (e.key.keysym.sym == SDLK_SPACE) return right ? 5u : 6u;
+			}
+
+			if (body->velocity[0] > -0.1 && body->velocity[0] < 0.01)
+				return right ? 1u : 2u;
+
+
+
 
 			return c; })
 		.determine(player->model->sprite_sheet.current_animation);
@@ -214,7 +227,7 @@ auto landing_sound(Entity* player, Reactive<SoundClips<n>>& sounds) {
 		.use([](PhysObj* body, SoundClips<n> steps) {
 			for (auto c : body->collisions.enter) {
 				if (c.velocity[1] > 0.5f) {
-					steps[rand() % n]->play(0,1);
+					steps[rand() % n]->play();
 					break;
 				}
 			}
@@ -276,7 +289,7 @@ void Level1::construct_updates(vector<std::unique_ptr<Updater>>& updates) {
 		.use(enemy_persue_player)
 		.determine(game_world.enemy->body));
 	updates.push_back(bounce(game_world.enemy, game_world.player.entity));
-	updates.push_back(animate(time, game_world.enemy, 8));
+	updates.push_back(animate(time, game_world.enemy, 5));
 
 	//updates.push_back(end_game(game_world.player.entity, current_level));
 	updates.push_back(landing_sound<7>(game_world.player.entity, game_sounds.pearson_landing_sounds));
