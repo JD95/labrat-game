@@ -4,8 +4,8 @@
 
 Level1Sounds::Level1Sounds(SceneState& scene)
 {
-	music.value = scene.load_sound("labrat-game/assets/music/pearson_awakes.wav");
-	music.value->play();
+	music.value = scene.load_sound("labrat-game/assets/music/Game.wav");
+	music.value->play(-1);
 
 	std::string path = "labrat-game/assets/sound_effects/";
 	std::string steps[7] = {
