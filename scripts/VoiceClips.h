@@ -42,16 +42,16 @@ struct VoiceClips {
 		, witty_clips(w)
 		, g(rd())
 	{
-		playlist.push_back(intro_clips.value[0]);
-		playlist.push_back(intro_clips.value[1]);
-		current_clip_length = intro_clips.value[0]->length();
+		playlist.push_back(intro_clips.v[0]);
+		playlist.push_back(intro_clips.v[1]);
+		current_clip_length = intro_clips.v[0]->length();
 		playlist[current_track]->play();
 	}
 
 	auto random_playlist() {
 		std::vector<Sound*> rand;
-		rand.insert(rand.end(), malaphor_clips.value.begin(), malaphor_clips.value.end());
-		rand.insert(rand.end(), witty_clips.value.begin(), witty_clips.value.end());
+		rand.insert(rand.end(), malaphor_clips.v.begin(), malaphor_clips.v.end());
+		rand.insert(rand.end(), witty_clips.v.begin(), witty_clips.v.end());
 		std::shuffle(rand.begin(), rand.end(), g);
 		return rand;
 	}

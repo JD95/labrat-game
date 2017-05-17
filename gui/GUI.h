@@ -39,7 +39,7 @@ struct VolumeSlides {
 	glm::vec3 operator()(std::vector<SDL_Event> events, bool toggled, glm::vec3 position) {
 		if (toggled) {
 
-			float y_offset = position[1] == 0.0f ? 0 : 100;
+			float y_offset = position[1] == 0.0f ? 0.0f : 100.0f;
 
 			for (auto event : events) {
 				bool within_x = event.button.x > 360 && event.button.x < 770;
@@ -47,28 +47,28 @@ struct VolumeSlides {
 				if (event.type == SDL_MOUSEBUTTONDOWN && within_x && within_y) {
 					position[0] = (event.button.x * 0.00185185f) - 1.0f;
 					if (position[1] == 0.0f) {
-						sfx_percent.value = (event.button.x - 360.0f) / (float)410;
-						for (auto c : audio_tracks->intro_clips.value) {
-							c->audio->volume = (int)(sfx_percent.value * 128);
+						sfx_percent.v = (event.button.x - 360.0f) / (float)410;
+						for (auto c : audio_tracks->intro_clips.v) {
+							c->audio->volume = (int)(sfx_percent.v * 128);
 						}
-						for (auto c : audio_tracks->malaphor_clips.value) {
-							c->audio->volume = (int)(sfx_percent.value * 128);
+						for (auto c : audio_tracks->malaphor_clips.v) {
+							c->audio->volume = (int)(sfx_percent.v * 128);
 						}
-						for (auto c : audio_tracks->witty_clips.value) {
-							c->audio->volume = (int)(sfx_percent.value * 128);
+						for (auto c : audio_tracks->witty_clips.v) {
+							c->audio->volume = (int)(sfx_percent.v * 128);
 						}
 						for (auto c : *landing_sounds) {
-							c->audio->volume = (int)(sfx_percent.value * 128);
+							c->audio->volume = (int)(sfx_percent.v * 128);
 						}
 						for (auto c : *bounce_sounds) {
-							c->audio->volume = (int)(sfx_percent.value * 128);
+							c->audio->volume = (int)(sfx_percent.v * 128);
 						}
 					}
 					else {
 
-						music_percent.value = (event.button.x - 360.0f) / (float)410;
+						music_percent.v = (event.button.x - 360.0f) / (float)410;
 						//std::cout << music_percent.value << "\n";
-						music->audio->volume = (int)(music_percent.value * 128);
+						music->audio->volume = (int)(music_percent.v * 128);
 					}
 					return position;
 				}

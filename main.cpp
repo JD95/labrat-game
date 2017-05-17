@@ -104,8 +104,8 @@ void test_reactive_values() {
 		x = 0;
 		for(auto& d : ds) d->calculate();
 		for (auto& d : ds) d->update();
-		std::cout << z.value << std::endl;
-		std::cout << foo.value << std::endl;
+		std::cout << z.v << std::endl;
+		std::cout << foo.v << std::endl;
 		system("pause");
 	}
 }

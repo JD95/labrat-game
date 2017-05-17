@@ -18,7 +18,7 @@
 Level1::Level1()
 	: game_world(*this)
 	, game_sounds(*this)
-	, gui(*this, game_sounds.music.value, &voice, &game_sounds.pearson_landing_sounds.value, &game_sounds.monster_bounces.value)
+	, gui(*this, game_sounds.music.v, &voice, &game_sounds.pearson_landing_sounds.v, &game_sounds.monster_bounces.v)
 	, voice(game_sounds.intro_clips, game_sounds.malaphors, game_sounds.witty)
 {
 	main_camera = Camera(glm::vec3(0.0f, -1.0f, 5.0f)		// Position
@@ -63,7 +63,7 @@ auto camera_track_object(Reactive<Camera>& camera, Entity* object) {
 }
 
 auto track_object_xy(Entity* tracker, Entity* source) {
-	auto tracker_z = tracker->transform.position.value[2];
+	auto tracker_z = tracker->transform.position.v[2];
 	return from(source->transform.position)
 		.use([tracker_z](glm::vec3 p) { return glm::vec3(p[0], p[1], tracker_z); })
 		.determine(tracker->transform.position);
@@ -72,7 +72,7 @@ auto track_object_xy(Entity* tracker, Entity* source) {
 
 auto rise_with_x_position(Entity* affected, Entity* source) {
 
-	auto original_position = affected->body.value->position[1];
+	auto original_position = affected->body.v->position[1];
 
 	return from(affected->body, source->body)
 		.use([original_position](PhysObj* a, PhysObj* s) {
@@ -87,7 +87,7 @@ auto rise_with_x_position(Entity* affected, Entity* source) {
 
 auto respawn_player(Entity* player, GUI& gui) {
 
-	auto original_position = player->transform.position.value;
+	auto original_position = player->transform.position.v;
 
 	return from(player->body)
 		.use([original_position, &gui](PhysObj* body) {
@@ -233,7 +233,9 @@ auto end_game(Player& player, Reactive<int>& current_level, object_id win_block)
 				if (c.id == win_block) return 2;
 				else return level;
 			}
+			return level;
 		}
+		
 	}).determine(current_level);
 }
 
@@ -254,7 +256,7 @@ auto landing_sound(Entity* player, Reactive<SoundClips<n>>& sounds) {
 
 
 auto raise_two_blocks(Entity* a, Player& p) {
-	float starting_y = a->body.value->position[1];
+	float starting_y = a->body.v->position[1];
 	return from(a->body, p.entity->body)
 		.use([y = starting_y](PhysObj* block, PhysObj* player) {
 		if (player->position[0] >= block->position[0]) {

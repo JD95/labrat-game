@@ -11,9 +11,9 @@ GUI::GUI(SceneState & state, Sound* m, VoiceClips* a, SoundClips<7>* p, SoundCli
 	settings_shortcut = state.gui_spawn(settings_shortcut_model(), -0.96f, 0.95f, 0.03f, 0.04f);
 	settings_window = state.gui_spawn(settings_model(), 10.0f, 0.0f, 0.5f, 0.5f);
 	music_slider = state.gui_spawn(slider_model(), 10.40f, 0.0f, 0.015f, 0.05f);
-	music_slider->transform.position.value[2] -= 0.1;
+	music_slider->transform.position.v[2] -= 0.1f;
 	sfx_slider = state.gui_spawn(slider_model(), 10.40f, -0.28f, 0.015f, 0.05f);
-	sfx_slider->transform.position.value[2] -= 0.1;
+	sfx_slider->transform.position.v[2] -= 0.1f;
 	
 	// HP Bar (Entities created after this will be deleted when health is lost)
 	current_hp = 24;
